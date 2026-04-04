@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus AI Chat</title>
+    <!-- Premium Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* CSS Variables */
+        :root {
+            --bg-master: #0a0a0f;
+            --bg-chat: rgba(18, 18, 24, 0.85);
+            --bg-bubble-ai: #1c1c24;
+            --bg-bubble-user: linear-gradient(135deg, #0284c7, #0d9488); /* Deep Blue to Teal */
+            
+            --text-main: #f4f4f5;
+            --text-dim: #a1a1aa;
+            
+            --accent: #0ea5e9;
+            --accent-hover: #0284c7;
+            
+            /* Graphic Colors */
+            --node-cyan: #00f0ff;
+            --node-pink: #ff00ea;
+            --node-green: #00ff66;
+            --node-purple: #9d00ff;
+        }
+
+        /* Base Reset */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body, html {
+            height: 100%;
+            width: 100%;
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: var(--bg-master);
+            color: var(--text-main);
+            overflow: hidden;
+            opacity: 0;
+            animation: fadeInPage 1.2s ease-in-out forwards;
+        }
+
+        @keyframes fadeInPage {
+            to { opacity: 1; }
+        }
+
+        /* Layout */
+        .layout {
+            display: flex;
+            height: 100vh;
+            width: 100vw;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* ==================== LEFT SIDE: CHAT PANE ==================== */
+        .chat-pane {
+            flex: 0 0 450px;
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-chat);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 20px 0 50px rgba(0, 0, 0, 0.5);
+            z-index: 10;
+        }
+
+        /* Header */
+        .chat-header {
+            padding: 24px 30px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.03), transparent);
+        }
+
+        .live-indicator {
+            width: 8px;
+            height: 8px;
+            background: var(--node-green);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--node-green);
+            animation: pulseLive 2s infinite ease-in-out;
+        }
+
+        @keyframes pulseLive {
+            0%, 100% { opacity: 0.5; box-shadow: 0 0 5px var(--node-green); }
+            50% { opacity: 1; box-shadow: 0 0 15px var(--node-green); }
+        }
+
+        .chat-header h1 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            letter-spacing: -0.03em;
+        }
+
+        .chat-header span {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            margin-left: auto;
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 2px 8px;
+            border-radius: 12px;
+        }
+
+        /* Messages Area */
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            scroll-behavior: smooth;
+        }
+
+        /* Custom Scrollbar */
+        .chat-messages::-webkit-scrollbar { width: 6px; }
+        .chat-messages::-webkit-scrollbar-track { background: transparent; }
+        .chat-messages::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
+
+        .message {
+            max-width: 85%;
+            padding: 14px 18px;
+            border-radius: 16px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            opacity: 0;
+            animation: slideUpMsg 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            word-wrap: break-word;
+        }
+
+        @keyframes slideUpMsg {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .msg-user {
+            align-self: flex-end;
+            background: var(--bg-bubble-user);
+            color: #fff;
+            border-bottom-right-radius: 4px;
+            box-shadow: 0 10px 20px rgba(13, 148, 136, 0.15);
+        }
+
+        .msg-ai {
+            align-self: flex-start;
+            background: var(--bg-bubble-ai);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom-left-radius: 4px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Markdown Styling inside Messages */
+        .message strong { color: #fff; font-weight: 700; }
+        .message code { background: rgba(255, 255, 255, 0.1); padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 0.9em; color: var(--node-cyan); }
+        
+        /* Typing Dots */
+        .typing-indicator {
+            display: none;
+            gap: 5px;
+            align-items: center;
+            padding: 14px 18px;
+            background: var(--bg-bubble-ai);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            border-bottom-left-radius: 4px;
+            align-self: flex-start;
+            width: max-content;
+        }
+
+        .typing-indicator.active { display: flex; }
+
+        .dot {
+            width: 6px;
+            height: 6px;
+            background: var(--text-dim);
+            border-radius: 50%;
+            animation: bounceDot 1.4s infinite ease-in-out both;
+        }
+
+        .dot:nth-child(1) { animation-delay: -0.32s; }
+        .dot:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes bounceDot {
+            0%, 80%, 100% { transform: scale(0); opacity: 0.5; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Input Area */
+        .chat-input-wrapper {
+            padding: 24px 30px;
+            background: rgba(18, 18, 24, 0.9);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .chat-input-box {
+            display: flex;
+            gap: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 6px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .chat-input-box:focus-within {
+            border-color: var(--accent);
+            box-shadow: 0 0 20px rgba(14, 165, 233, 0.2);
+        }
+
+        .chat-input-box input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            padding: 12px 16px;
+            color: #fff;
+            font-family: inherit;
+            font-size: 0.95rem;
+            outline: none;
+        }
+
+        .chat-input-box input::placeholder { color: rgba(255, 255, 255, 0.3); }
+
+        .chat-input-box button {
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0 24px;
+            font-family: inherit;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+        }
+
+        .chat-input-box button:hover { background: var(--accent-hover); }
+        .chat-input-box button:active { transform: scale(0.96); }
+
+
+        /* ==================== RIGHT SIDE: VISUAL PANE ==================== */
+        .visual-pane {
+            flex: 1;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: radial-gradient(circle at center, rgba(30,30,45,0.4) 0%, transparent 70%);
+        }
+
+        /* Tunnel Grid Background */
+        .perspective-grid {
+            position: absolute;
+            inset: -100%;
+            background-image: 
+                linear-gradient(rgba(0, 240, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 240, 255, 0.05) 1px, transparent 1px);
+            background-size: 60px 60px;
+            transform: perspective(600px) rotateX(70deg);
+            animation: gridTunnel 15s linear infinite;
+            transform-origin: center top;
+            z-index: 0;
+            pointer-events: none;
+            mask-image: linear-gradient(to top, transparent 10%, black 70%);
+            -webkit-mask-image: linear-gradient(to top, transparent 10%, black 70%);
+        }
+
+        @keyframes gridTunnel {
+            0% { transform: perspective(600px) rotateX(70deg) translateY(0); }
+            100% { transform: perspective(600px) rotateX(70deg) translateY(60px); }
+        }
+
+        /* 3D Graphic Container */
+        .graphic-container {
+            position: relative;
+            z-index: 1;
+            width: 500px;
+            height: 500px;
+            /* Isometric Projection */
+            transform: rotateX(60deg) rotateZ(-45deg);
+            transform-style: preserve-3d;
+            animation: floatBob 6s ease-in-out infinite alternate;
+        }
+
+        @keyframes floatBob {
+            0% { transform: rotateX(60deg) rotateZ(-45deg) translateZ(0px); }
+            100% { transform: rotateX(60deg) rotateZ(-45deg) translateZ(40px); }
+        }
+
+        /* Glass Base Board */
+        .glass-board {
+            position: absolute;
+            inset: 0;
+            background: rgba(20, 25, 40, 0.2);
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            border-radius: 24px;
+            box-shadow: 
+                inset 0 0 60px rgba(0, 240, 255, 0.05), 
+                0 30px 80px rgba(0, 0, 0, 0.8),
+                0 0 0 1px rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            transform: translateZ(0px);
+            transform-style: preserve-3d;
+        }
+
+        /* Floating UI Panels on Board */
+        .panel {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            transform: translateZ(10px);
+        }
+
+        /* Nodes */
+        .node {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            transform: translateZ(60px); 
+            animation: pulseNode 3s infinite alternate;
+        }
+
+        /* Centering adjustment */
+        .node::after {
+            content: '';
+            position: absolute;
+            inset: -10px;
+            border-radius: 50%;
+            border: 1px solid inherit;
+            opacity: 0.5;
+            animation: ripple 2s infinite linear;
+        }
+
+        .n-cyan { top: 20%; left: 20%; background: var(--node-cyan); box-shadow: 0 0 25px var(--node-cyan); border-color: var(--node-cyan); margin: -10px 0 0 -10px; }
+        .n-pink { top: 75%; left: 25%; background: var(--node-pink); box-shadow: 0 0 25px var(--node-pink); border-color: var(--node-pink); margin: -10px 0 0 -10px; animation-delay: -1s;}
+        .n-green { top: 25%; left: 75%; background: var(--node-green); box-shadow: 0 0 25px var(--node-green); border-color: var(--node-green); margin: -10px 0 0 -10px; animation-delay: -2s;}
+        .n-purple { top: 80%; left: 80%; background: var(--node-purple); box-shadow: 0 0 25px var(--node-purple); border-color: var(--node-purple); margin: -10px 0 0 -10px; animation-delay: -1.5s;}
+
+        .node-main {
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 60px; height: 60px;
+            margin: -30px 0 0 -30px;
+            transform: translateZ(90px);
+            border-radius: 12px;
+            background: rgba(14, 165, 233, 0.1);
+            border: 1px solid var(--accent);
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 0 40px rgba(14, 165, 233, 0.5), inset 0 0 20px rgba(14, 165, 233, 0.3);
+        }
+
+        .node-main .core {
+            width: 24px; height: 24px; 
+            background: #fff; 
+            border-radius: 6px;
+            box-shadow: 0 0 20px #fff;
+            animation: pulseMainCore 2s alternate infinite;
+        }
+
+        @keyframes pulseNode {
+            0% { transform: translateZ(60px) scale(0.9); opacity: 0.8; }
+            100% { transform: translateZ(60px) scale(1.1); opacity: 1; }
+        }
+
+        @keyframes ripple {
+            0% { transform: scale(1); opacity: 0.8; }
+            100% { transform: scale(2.5); opacity: 0; }
+        }
+
+        @keyframes pulseMainCore {
+            0% { transform: scale(0.9); box-shadow: 0 0 10px #fff; }
+            100% { transform: scale(1.2); box-shadow: 0 0 35px #fff; }
+        }
+
+        /* SVG Connections Container */
+        .connections-container {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            transform: translateZ(30px);
+            pointer-events: none;
+            overflow: visible;
+        }
+
+        .flow-line {
+            fill: none;
+            stroke-width: 1.5;
+            stroke-dasharray: 8 8;
+            opacity: 0.6;
+            animation: dashFlow 20s linear infinite;
+        }
+
+        .c-cyan { stroke: var(--node-cyan); }
+        .c-pink { stroke: var(--node-pink); }
+        .c-green { stroke: var(--node-green); }
+        .c-purple { stroke: var(--node-purple); }
+
+        @keyframes dashFlow {
+            to { stroke-dashoffset: -400; }
+        }
+
+        /* Data Packets (Glowing dots travelling) */
+        .packet {
+            fill: #fff;
+            r: 2;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .layout { flex-direction: column; }
+            .chat-pane { 
+                flex: none; 
+                height: 60vh; 
+                width: 100%; 
+                max-width: 100%; 
+                border-right: none; 
+                border-bottom: 1px solid rgba(255,255,255,0.1); 
+            }
+            .visual-pane { flex: 1; }
+            .graphic-container { width: 300px; height: 300px; }
+            .perspective-grid { background-size: 40px 40px; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="layout">
+        
+        <!-- ==================== LEFT SIDE: CHAT PANE ==================== -->
+        <div class="chat-pane">
+            <header class="chat-header">
+                <div class="live-indicator"></div>
+                <h1>Nexus AI</h1>
+                <span>Live Mode</span>
+            </header>
+
+            <div class="chat-messages" id="chat-messages">
+                <div class="message msg-ai">
+                    Hello. I am the <strong>Nexus AI</strong> backend analyzer.
+                    <br><br>
+                    I monitor your Jira, GitHub, Slack, and Google Calendar directly from the APIs to forecast sprint bottlenecks. What would you like to know?
+                </div>
+
+                <!-- Typing indicator is kept at the bottom and toggled -->
+                <div class="typing-indicator" id="typing-indicator">
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                </div>
+            </div>
+
+            <div class="chat-input-wrapper">
+                <form class="chat-input-box" id="chat-form">
+                    <input type="text" id="chat-input" placeholder="Ask about sprint health or workload..." autocomplete="off">
+                    <button type="submit">Send</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- ==================== RIGHT SIDE: VISUAL PANE ==================== -->
+        <div class="visual-pane">
+            
+            <div class="perspective-grid"></div>
+
+            <div class="graphic-container">
+                <!-- Isometric Base -->
+                <div class="glass-board">
+                    <!-- Subtle generic UI blocks embedded in the glass -->
+                    <div class="panel" style="top: 15%; left: 10%; width: 25%; height: 10%;"></div>
+                    <div class="panel" style="top: 35%; right: 10%; width: 15%; height: 25%;"></div>
+                    <div class="panel" style="bottom: 15%; left: 15%; width: 40%; height: 15%;"></div>
+                </div>
+
+                <!-- Isometric Nodes matching the coordinates of the SVG -->
+                <div class="node n-cyan"></div>
+                <div class="node n-pink"></div>
+                <div class="node n-green"></div>
+                <div class="node n-purple"></div>
+                
+                <!-- Center Core -->
+                <div class="node-main"><div class="core"></div></div>
+
+                <!-- Connections -->
+                <svg class="connections-container" preserveAspectRatio="none" viewBox="0 0 100 100">
+                    
+                    <!-- Dotted structural lines -->
+                    <line x1="20" y1="20" x2="50" y2="50" class="flow-line c-cyan" />
+                    <line x1="25" y1="75" x2="50" y2="50" class="flow-line c-pink" />
+                    <line x1="75" y1="25" x2="50" y2="50" class="flow-line c-green" />
+                    <line x1="80" y1="80" x2="50" y2="50" class="flow-line c-purple" />
+
+                    <!-- Animated Data Packets (Lights moving along paths) -->
+                    <circle class="packet" style="filter: drop-shadow(0 0 4px var(--node-cyan));">
+                        <animateMotion dur="2.4s" repeatCount="indefinite" path="M 20 20 L 50 50" />
+                    </circle>
+                    <circle class="packet" style="filter: drop-shadow(0 0 4px var(--node-pink));">
+                        <animateMotion dur="3.1s" repeatCount="indefinite" path="M 25 75 L 50 50" />
+                    </circle>
+                    <circle class="packet" style="filter: drop-shadow(0 0 4px var(--node-green));">
+                        <animateMotion dur="1.8s" repeatCount="indefinite" path="M 75 25 L 50 50" />
+                    </circle>
+                    <circle class="packet" style="filter: drop-shadow(0 0 4px var(--node-purple));">
+                        <animateMotion dur="2.7s" repeatCount="indefinite" path="M 80 80 L 50 50" />
+                    </circle>
+                </svg>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Interactivity JS -->
+    <script>
+        const form = document.getElementById('chat-form');
+        const inputField = document.getElementById('chat-input');
+        const messagesContainer = document.getElementById('chat-messages');
+        const typingIndicator = document.getElementById('typing-indicator');
+
+        // Simulated AI responses with minimal Markdown
+        const aiResponses = [
+            "Based on the live Jira sweep, **SCRUM-12** is currently blocked because the associate GitHub PR is failing CI checks.",
+            "I've looked at the load distribution. `Alex` has 4 tickets in progress simultaneously. Might want to check in on context switching.",
+            "Your calendar snapshot shows 6 hours of meetings for the backend team tomorrow. I recommend minimizing ad-hoc requests.",
+            "The sprint completion trajectory is currently sitting at **82%** confidence. No immediate critical red flags detected across the 4 main tools.",
+            "I noticed a Slack thread in `#dev-backend` discussing deployment failures. It maps to the ongoing release ticket. Would you like me to summarize it?"
+        ];
+
+        // Extremely simple Markdown Parser
+        function parseMarkdown(text) {
+            let parsed = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            parsed = parsed.replace(/`(.*?)`/g, '<code>$1</code>');
+            parsed = parsed.replace(/\n/g, '<br>');
+            return parsed;
+        }
+
+        function addMessage(text, isUser) {
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `message ${isUser ? 'msg-user' : 'msg-ai'}`;
+            msgDiv.innerHTML = parseMarkdown(text);
+            
+            messagesContainer.insertBefore(msgDiv, typingIndicator);
+            scrollToBottom();
+        }
+
+        function scrollToBottom() {
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const text = inputField.value.trim();
+            if (!text) return;
+
+            // User Message
+            addMessage(text, true);
+            inputField.value = '';
+            
+            // Show Typing
+            typingIndicator.classList.add('active');
+            scrollToBottom();
+
+            // Simulate AI Delay
+            const delay = 1200 + Math.random() * 1500;
+            setTimeout(() => {
+                typingIndicator.classList.remove('active');
+                const randomResponse = aiResponses[Math.floor(Math.random() * aiResponses.length)];
+                addMessage(randomResponse, false);
+            }, delay);
+        });
+    </script>
+</body>
+</html>

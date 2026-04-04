@@ -1,0 +1,10 @@
+fastapi[standard]
+uvicorn
+aiofiles
+requests
+groq
+slack_sdk
+google-auth
+google-auth-oauthlib
+google-api-python-client
+pydantic

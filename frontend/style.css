@@ -1,0 +1,2320 @@
+:root {
+    --card-margin: 1.5vw;
+    --content-margin: 7.5vw;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background: #ffffff;
+    color: #111111;
+    overflow-x: hidden;
+}
+
+/* ===================== PRELOADER ===================== */
+#preloader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #111111;
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.preloader-content {
+    position: relative;
+    width: 80vw;
+    max-width: 1100px;
+    display: flex;
+    justify-content: center;
+}
+
+#preloader-svg {
+    display: block;
+}
+
+/* ----------------------------------------------------- */
+
+/* --- Header Layout Match --- */
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 30px var(--content-margin);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 60px;
+    /* Wider gap between logo and nav */
+}
+
+.logo {
+    font-size: 26px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    letter-spacing: -0.02em;
+    color: #111;
+}
+
+.nexus-logo-icon {
+    width: 38px;
+    height: 38px;
+    /* Deep blue to bright cyan gradient pushing from bottom center */
+    background: radial-gradient(130% 130% at 50% 100%, #00d2ff 0%, #2f3ce0 60%, #1e1b8b 100%);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(47, 60, 224, 0.4);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Enhances the inner cyan glow inside the box from the bottom */
+.nexus-logo-icon::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 10%;
+    width: 80%;
+    height: 20px;
+    background: #00d2ff;
+    filter: blur(12px);
+    opacity: 0.8;
+}
+
+.nexus-logo-icon svg {
+    width: 20px;
+    height: 20px;
+    position: relative;
+    z-index: 2;
+    /* Soft white outer glow that blends with the cyan behind it */
+    filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.5));
+}
+
+.nav-links {
+    display: flex;
+    gap: 30px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #777;
+    /* Cool gray */
+    font-size: 16px;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.nav-links a:hover {
+    color: #111;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.music-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(0, 0, 0, 0.65);
+    background: transparent;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 1.5px solid #bbb;
+    cursor: pointer;
+    transition: border-color 0.2s;
+}
+
+.music-icon:hover {
+    border-color: #555;
+}
+
+.nav-btn {
+    padding: 12px 24px;
+    border-radius: 50px;
+    border: 1px solid #ccc;
+    background: transparent;
+    color: #111;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.nav-btn:hover {
+    border-color: #000;
+}
+
+
+
+/* --- Pinned Section & Video --- */
+.hero-pinned-section {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    max-height: 100vh;
+    /* Hard cap — never grows larger than viewport */
+    background: #fff;
+    overflow: hidden;
+    /* Clip text-layer absolutely within bounds */
+    flex-shrink: 0;
+    /* Prevent flex parents from compressing it */
+}
+
+.video-container {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    /* Ensures video scales perfectly towards 3vw left margin */
+    align-items: flex-start;
+    /* Ensures top margin maps flawlessly */
+}
+
+#hero-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 0px;
+    will-change: width, height, border-radius, margin-top;
+}
+
+/* --- Text Alignment & Styling --- */
+.text-layer {
+    position: absolute;
+    bottom: 5vh;
+    left: var(--content-margin);
+    width: calc(100vw - (var(--content-margin) * 2));
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    z-index: 10;
+    pointer-events: none;
+}
+
+.text-top {
+    flex: 1;
+    max-width: 55%;
+    pointer-events: auto;
+}
+
+.subtitle {
+    display: block;
+    color: #8C52FF;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    margin-bottom: 14px;
+    /* Exact gap between label and heading matching reference */
+    text-transform: uppercase;
+    /* GSAP */
+    opacity: 0;
+    filter: blur(10px);
+    transform: translateY(20px);
+}
+
+.main-title {
+    font-size: clamp(32px, 3vw, 54px);
+    /* Slightly tighter cap to better match reference's proportional size */
+    font-weight: 800;
+    line-height: 1.06;
+    letter-spacing: -0.03em;
+    color: #111;
+}
+
+.text-bottom {
+    flex: 0 0 auto;
+    width: 420px;
+    /* Wide enough to fit description in exactly 2 lines like reference */
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    align-items: flex-start;
+    pointer-events: auto;
+    /* Aligns description top to match heading start (subtitle height 12px + margin 16px + line-height offset) */
+    margin-top: 36px;
+    /* GSAP */
+    opacity: 0;
+    filter: blur(15px);
+    transform: translateY(40px);
+}
+
+.description {
+    font-size: 14px;
+    /* Compact, matches reference site's small body text */
+    color: #555;
+    line-height: 1.7;
+    font-weight: 400;
+}
+
+/* --- Buttons --- */
+.button-group {
+    display: flex;
+    gap: 12px;
+}
+
+.try-btn {
+    padding: 13px 28px;
+    border-radius: 50px;
+    border: none;
+    background: #eaff5f;
+    color: #111;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.try-btn:hover {
+    transform: scale(1.05);
+}
+
+.nexus-guide-input-area {
+    padding: 16px 20px;
+    background: rgba(0, 0, 0, 0.4);
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.nexus-guide-input-wrap {
+    display: flex;
+    gap: 12px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 6px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.nexus-guide-input-wrap:focus-within {
+    border-color: #00d2ff;
+    box-shadow: 0 0 15px rgba(0, 210, 255, 0.15);
+}
+
+.nexus-guide-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    padding: 10px 12px;
+    color: #fff;
+    font-size: 14px;
+    outline: none;
+    font-family: inherit;
+}
+
+.nexus-guide-input::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+.nexus-guide-send {
+    background: linear-gradient(135deg, #0ea5e9, #0284c7);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 0 20px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.1s, box-shadow 0.2s;
+    font-family: inherit;
+}
+
+.nexus-guide-send:hover {
+    box-shadow: 0 4px 15px rgba(14, 165, 233, 0.4);
+}
+
+.nexus-guide-send:active {
+    transform: scale(0.96);
+}
+
+.arrow-btn {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: none;
+    background: #eaff5f;
+    color: #111;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.arrow-btn:hover {
+    transform: scale(1.05);
+}
+
+/* ===================== PHASE 2: TICKER ===================== */
+.ticker-section {
+    width: 100%;
+    background: #fff;
+    padding: 40px 0;
+    overflow: hidden;
+    border-top: 1px solid #ebebeb;
+    border-bottom: 1px solid #ebebeb;
+}
+
+.ticker-track {
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.ticker-inner {
+    display: inline-flex;
+    align-items: center;
+    gap: 0;
+    animation: ticker-scroll 28s linear infinite;
+    will-change: transform;
+}
+
+@keyframes ticker-scroll {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-50%);
+    }
+
+    /* Moves exactly one set (9 items) */
+}
+
+.ticker-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 20px;
+    font-size: 18px;
+    font-weight: 500;
+    color: #222;
+    letter-spacing: -0.01em;
+    padding: 0 28px;
+    white-space: nowrap;
+}
+
+.ticker-icon {
+    color: #c5bfff;
+    /* Soft lavender matching reference */
+    font-size: 16px;
+    opacity: 0.9;
+}
+
+/* ===================== PHASE 3: TECHNOLOGY SECTION ===================== */
+.tech-section {
+    position: relative;
+    background: #f4f4f6;
+    padding: 100px var(--content-margin) 120px;
+    overflow: hidden;
+    height: 100vh;
+    /* Fills the pinned viewport perfectly */
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+.tech-content {
+    position: relative;
+    z-index: 2;
+    max-width: 700px;
+    /* Wide enough for 2-line heading at any viewport */
+}
+
+.section-label {
+    display: block;
+    color: #8C52FF;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    margin-bottom: 22px;
+}
+
+.tech-heading {
+    font-size: clamp(32px, 3.5vw, 58px);
+    font-weight: 800;
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+    color: #111;
+    margin-bottom: 36px;
+}
+
+.tech-body {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 480px;
+}
+
+.tech-body p {
+    font-size: 18px;
+    color: #555;
+    line-height: 1.75;
+    font-weight: 400;
+}
+
+/* Dot grid pattern — bottom-left decoration matching reference */
+.dot-grid {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 50%;
+    height: 50%;
+    background-image: radial-gradient(circle, #c0c0c8 1px, transparent 1px);
+    background-size: 22px 22px;
+    -webkit-mask-image: linear-gradient(to top right, rgba(0, 0, 0, 0.3) 0%, transparent 60%);
+    mask-image: linear-gradient(to top right, rgba(0, 0, 0, 0.3) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Particle canvas — right half of tech section */
+#dot-canvas {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 58%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* ===================== PHASE 4: PRODUCTS SECTION ===================== */
+.products-section {
+    background: transparent;
+    position: relative;
+    z-index: 10;
+    margin-top: -100vh;
+}
+
+.products-container {
+    background: #111111;
+    border-radius: 40px 40px 0 0;
+    padding: 120px var(--content-margin);
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 -20px 40px rgba(0, 0, 0, 0.1);
+}
+
+.products-container .section-label {
+    /* override generic label margin for this container */
+    margin-bottom: 20px;
+}
+
+.products-heading {
+    font-size: clamp(32px, 3.5vw, 42px);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    margin-bottom: 60px;
+}
+
+.products-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 24px;
+}
+
+.product-card {
+    background: #1c1c1f;
+    border-radius: 20px;
+    padding: 40px;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+        box-shadow 0.4s ease;
+    cursor: pointer;
+    will-change: transform;
+}
+
+.product-card:hover {
+    box-shadow: 0 32px 64px rgba(0, 0, 0, 0.5), 0 0 1px rgba(140, 82, 255, 0.2);
+    border-color: rgba(140, 82, 255, 0.15);
+}
+
+.card-wide {
+    grid-column: span 2;
+    padding-right: 480px;
+    /* Leave space for widget */
+    min-height: 380px;
+}
+
+.card-half {
+    grid-column: span 1;
+    min-height: 340px;
+}
+
+.card-bg-wrap {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 65%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none;
+    mask-image: linear-gradient(to right, transparent, black 40%);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 40%);
+    border-radius: 0 20px 20px 0;
+}
+
+.card-half .card-bg-wrap {
+    width: 100%;
+    mask-image: linear-gradient(to top right, transparent, black 60%);
+    -webkit-mask-image: linear-gradient(to top right, transparent, black 60%);
+    border-radius: 20px;
+}
+
+.card-bg {
+    position: absolute;
+    top: -10%;
+    left: 0;
+    width: 100%;
+    height: 120%;
+    background-size: cover;
+    background-position: center;
+    opacity: 0.65;
+    mix-blend-mode: screen;
+    transform: scale(1);
+}
+
+/* Removed CSS background hover to allow GSAP to handle it (prevent transform conflicts) */
+
+/* Per-card background images */
+.product-card:nth-child(1) .card-bg {
+    background-image: url('card1.jpg');
+}
+
+.product-card:nth-child(2) .card-bg {
+    background-image: url('card2.webp');
+}
+
+.product-card:nth-child(3) .card-bg {
+    background-image: url('card3.webp');
+}
+
+.product-card:nth-child(4) .card-bg {
+    background-image: url('card4.jpg');
+}
+
+.product-card:nth-child(5) .card-bg {
+    background-image: url('card5.jpg');
+}
+
+/* Icon glow on hover */
+.card-icon {
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.product-card:hover .card-icon {
+    box-shadow: 0 0 22px rgba(234, 255, 95, 0.45);
+    transform: scale(1.08);
+}
+
+/* Typewriter blinking cursor */
+@keyframes blink {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+    }
+}
+
+.typewriter-cursor {
+    display: inline-block;
+    animation: blink 1s step-end infinite;
+    color: #8C52FF;
+    font-weight: 300;
+    margin-left: 1px;
+}
+
+/* Base icon positioning */
+.card-icon {
+    width: 52px;
+    height: 52px;
+    background: #2a2a2e;
+    /* dark grayish box matching reference border/fill style */
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #eaff5f;
+    position: relative;
+    z-index: 2;
+}
+
+.icon-svg {
+    width: 24px;
+    height: 24px;
+}
+
+/* The wide card icon aligned with half cards — pushed down near the text */
+.card-wide .card-icon {
+    margin-top: auto;
+}
+
+/* The half cards have icons pushed to bottom left */
+.card-half .card-icon {
+    margin-top: auto;
+}
+
+.card-content {
+    position: relative;
+    z-index: 2;
+    margin-top: 40px;
+    /* space between icon and text */
+}
+
+.card-content h3 {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    letter-spacing: -0.02em;
+}
+
+.card-content p {
+    font-size: 17px;
+    color: #888;
+    line-height: 1.65;
+}
+
+/* Wide Card Widget (Audio/Text UI floating on the right) */
+.card-ui-widget {
+    position: absolute;
+    right: 60px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 360px;
+    background: #151518;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 16px;
+    padding: 28px;
+    z-index: 5;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+.widget-header {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 16px;
+}
+
+.widget-body {
+    font-size: 20px;
+    color: #fff;
+    line-height: 1.5;
+    margin-bottom: 32px;
+    font-family: monospace;
+    /* Typewriter look */
+}
+
+.widget-btn {
+    background: #8C52FF;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 14px 28px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(140, 82, 255, 0.25);
+    transition: transform 0.2s, background 0.2s;
+}
+
+.widget-btn:hover {
+    transform: translateY(-2px);
+    background: #9d6dff;
+}
+
+/* ===================== PHASE 5: EXPERTISE SECTION ===================== */
+.expertise-section {
+    background: #ffffff;
+    /* Match clean white background */
+    padding: 100px 0 100px var(--content-margin);
+    /* Better vertical padding */
+    overflow: hidden;
+}
+
+.expertise-content {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 8vw;
+    /* responsive gap */
+}
+
+.expertise-left {
+    flex: 0 1 600px;
+}
+
+.expertise-left .section-label {
+    margin-bottom: 16px;
+}
+
+.expertise-heading {
+    font-size: clamp(36px, 4vw, 54px);
+    font-weight: 700;
+    color: #222;
+    letter-spacing: -0.02em;
+    margin-bottom: 30px;
+    line-height: 1.1;
+}
+
+/* Tabs */
+.expertise-tabs {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 0;
+    margin-bottom: 30px;
+    border: 1px solid #ebebeb;
+    border-radius: 50px;
+    padding: 5px;
+    background: #fff;
+}
+
+.expertise-tabs button {
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    /* create stacking context for progress background */
+    background: transparent;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 50px;
+    font-size: 16px;
+    font-weight: 400;
+    color: #888;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.expertise-tabs button:hover {
+    color: #111;
+}
+
+.expertise-tabs button.active {
+    background: #dafc2b;
+    /* Lime/yellow color matching other buttons */
+    color: #111;
+    font-weight: 500;
+    box-shadow: none;
+}
+
+.tab-progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0%;
+    background: rgba(0, 0, 0, 0.08);
+    /* Dark tint over the lime background */
+    z-index: -1;
+    /* Goes behind the text */
+    pointer-events: none;
+}
+
+.tab-pane {
+    display: none;
+}
+
+/* Old CSS animations removed - JS Handles them now */
+.expertise-header-wrap {
+    margin-bottom: 20px;
+}
+
+.expertise-big-heading {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: #111;
+}
+
+.expertise-subtitle {
+    font-size: 16px;
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 32px;
+}
+
+/* Mini Data Card (Monospace Style) Context & Base */
+.mini-data-card {
+    border-radius: 12px;
+    padding: 24px;
+    font-family: monospace;
+    max-width: 440px;
+}
+
+/* Base structural styles */
+.mdc-header {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid;
+    padding-bottom: 12px;
+    margin-bottom: 12px;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.mdc-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.mdc-row:last-child {
+    margin-bottom: 0;
+}
+
+/* Base Values Colors */
+.val-cyan {
+    color: #00D2FF;
+}
+
+.val-green {
+    color: #00E676;
+}
+
+.val-orange {
+    color: #FFB000;
+}
+
+.val-red {
+    color: #FF3D00;
+}
+
+/* THEME: GitHub (Dark View) */
+.mdc-github {
+    background: #0B0E14;
+    border: 1px solid #2A2E35;
+    color: #fff;
+}
+
+.mdc-github .mdc-header {
+    border-color: #2A2E35;
+}
+
+.mdc-github .mdc-header span:first-child {
+    color: #00D2FF;
+}
+
+.mdc-github .mdc-header span:last-child {
+    color: #8B949E;
+}
+
+.mdc-github .mdc-row span:first-child {
+    color: #A9B2C3;
+}
+
+/* THEME: Jira (Deep Blue/Grey) */
+.mdc-jira {
+    background: #1C2331;
+    border: 1px solid #2A3343;
+    color: #fff;
+}
+
+.mdc-jira .mdc-header {
+    border-color: #2A3343;
+}
+
+.mdc-jira .mdc-header span:first-child {
+    color: #00D2FF;
+    /* Cyan title text */
+}
+
+.mdc-jira .mdc-header span:last-child {
+    color: #8B949E;
+}
+
+.mdc-jira .mdc-row span:first-child {
+    color: #A9B2C3;
+}
+
+/* THEME: Calendar (Very Dark Navy - from reference) */
+.mdc-calendar {
+    background: #0B0E14;
+    /* Extremely dark blue almost black */
+    border: 1px solid #2A2E35;
+    color: #fff;
+}
+
+.mdc-calendar .mdc-header {
+    border-color: #2A2E35;
+}
+
+.mdc-calendar .mdc-header span:first-child {
+    color: #00D2FF;
+    /* Cyan title text */
+}
+
+.mdc-calendar .mdc-header span:last-child {
+    color: #8B949E;
+    /* Subtle grey load text */
+}
+
+.mdc-calendar .mdc-row span:first-child {
+    color: #8B949E;
+    /* Subtle labels */
+}
+
+/* THEME: Slack (Deep Purple/Black) */
+.mdc-slack {
+    background: #171120;
+    border: 1px solid #2A2135;
+    color: #fff;
+}
+
+.mdc-slack .mdc-header {
+    border-color: #2A2135;
+}
+
+.mdc-slack .mdc-header span:first-child {
+    color: #dafc2b;
+    /* Lime/yellow title text */
+}
+
+.mdc-slack .mdc-header span:last-child {
+    color: #A195B1;
+}
+
+.mdc-slack .mdc-row span:first-child {
+    color: #C1B5D1;
+    /* Purplish grey labels */
+}
+
+/* Stacked Notifications Right Side */
+.expertise-right {
+    flex: 1;
+    max-width: 580px;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.stacked-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    max-width: 540px;
+}
+
+.stacked-card {
+    background: #fff;
+    border: 1px solid #eaeaea;
+    padding: 32px;
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.4s ease, border-color 0.4s ease;
+    cursor: default;
+}
+
+.stacked-card:hover {
+    transform: translateY(-6px);
+}
+
+#tab-github .stacked-card:hover {
+    border-color: rgba(140, 82, 255, 0.3);
+    box-shadow: 0 15px 40px rgba(140, 82, 255, 0.12);
+}
+
+#tab-jira .stacked-card:hover {
+    border-color: rgba(0, 210, 255, 0.3);
+    box-shadow: 0 15px 40px rgba(0, 210, 255, 0.12);
+}
+
+#tab-calendar .stacked-card:hover {
+    border-color: rgba(0, 230, 118, 0.3);
+    box-shadow: 0 15px 40px rgba(0, 230, 118, 0.12);
+}
+
+#tab-slack .stacked-card:hover {
+    border-color: rgba(190, 222, 10, 0.4);
+    box-shadow: 0 15px 40px rgba(190, 222, 10, 0.15);
+}
+
+.stacked-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 16px;
+}
+
+.stacked-header h3 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #111;
+}
+
+.stacked-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.4s ease;
+}
+
+.stacked-card:hover .stacked-icon {
+    transform: scale(1.1) rotate(5deg);
+}
+
+#tab-github .stacked-icon {
+    color: #8C52FF;
+}
+
+/* Purple */
+#tab-jira .stacked-icon {
+    color: #00D2FF;
+}
+
+/* Cyan */
+#tab-calendar .stacked-icon {
+    color: #00E676;
+}
+
+/* Green */
+#tab-slack .stacked-icon {
+    color: #b1cc06;
+}
+
+/* Lime (visible on white) */
+
+.stacked-icon svg {
+    width: 32px;
+    height: 32px;
+}
+
+.stacked-card p {
+    font-size: 16px;
+    color: #555;
+    line-height: 1.6;
+}
+
+.phone-container {
+    width: 60vw;
+    max-width: 1000px;
+    height: 700px;
+    position: relative;
+    border-radius: 40px 0 0 40px;
+    overflow: hidden;
+}
+
+.phone-mockup {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: left center;
+    /* Darken blend mode will make the white background transparent against #f4f4f6 */
+    mix-blend-mode: darken;
+}
+
+/* ---- Scroll-reveal pin wrapper ---- */
+.features-section {
+    background: #f4f4f6;
+    padding-top: 120px;
+    padding-left: var(--content-margin);
+    padding-right: var(--content-margin);
+    padding-bottom: 0;
+}
+
+.features-heading {
+    font-size: clamp(32px, 3.5vw, 42px);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    margin-bottom: 16px;
+    color: #111;
+}
+
+.features-subtext {
+    font-size: 18px;
+    color: #666;
+    margin-bottom: 60px;
+    max-width: 600px;
+}
+
+.health-pin-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.health-sticky-inner {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0;
+    width: 100%;
+}
+
+/* Move grid layout to the inner container */
+.health-content-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+    width: 100%;
+}
+
+/* ================= LEFT: White Health Cards ================= */
+.health-visuals-panel {
+    position: relative;
+    height: 400px;
+    /* Space for the stacked absolute cards */
+    z-index: 1;
+}
+
+/* Ambient glow inside panels */
+.health-ambient-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 70%;
+    height: 70%;
+    border-radius: 50%;
+    filter: blur(100px);
+    opacity: 0.4;
+    transition: background-color 0.8s ease;
+    z-index: -1;
+    pointer-events: none;
+}
+
+.glow-risk {
+    background-color: #ff4444;
+}
+
+.glow-watch {
+    background-color: #ffb800;
+}
+
+.glow-track {
+    background-color: #00ff88;
+}
+
+.white-card {
+    position: absolute;
+    inset: 0;
+    background: #fff;
+    border-radius: 20px;
+    padding: 40px;
+    border-left: 8px solid #ccc;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.06);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease, transform 0.5s ease, box-shadow 0.3s ease;
+    transform: translateY(20px);
+    display: flex;
+    flex-direction: column;
+}
+
+.white-card.w-active {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+.white-card.w-active:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.1);
+}
+
+.w-risk {
+    border-left-color: #ff4444;
+}
+
+.w-watch {
+    border-left-color: #ffb800;
+}
+
+.w-track {
+    border-left-color: #00ff88;
+}
+
+.health-card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.health-icon {
+    font-size: 28px;
+    line-height: 1;
+}
+
+.health-title {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.w-risk .health-title {
+    color: #d32f2f;
+}
+
+.w-watch .health-title {
+    color: #e65100;
+}
+
+.w-track .health-title {
+    color: #2e7d32;
+}
+
+.health-subtitle {
+    font-size: 16px;
+    color: #555;
+    line-height: 1.5;
+    margin-bottom: 24px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid #eaeaea;
+}
+
+.health-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.health-list li {
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 16px;
+    position: relative;
+    padding-left: 20px;
+    line-height: 1.5;
+
+    /* Reveal Physics */
+    opacity: 0;
+    transform: translateY(15px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.health-list li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: #999;
+    font-weight: 800;
+}
+
+/* Staggered execution upon becoming active */
+.w-active .health-list li {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.w-active .health-list li:nth-child(1) {
+    transition-delay: 0.25s;
+}
+
+.w-active .health-list li:nth-child(2) {
+    transition-delay: 0.35s;
+}
+
+.w-active .health-list li:nth-child(3) {
+    transition-delay: 0.45s;
+}
+
+/* ================= RIGHT: Dark Accordion Cards ================= */
+.health-accordion-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.dark-accordion-card {
+    position: relative;
+    background: #1c1c1f;
+    border-radius: 24px;
+    padding: 32px;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    cursor: pointer;
+    overflow: hidden;
+    transition: background 0.4s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    /* keeps Pill aligned when height expands from above */
+}
+
+.dark-accordion-card:hover {
+    background: #242429;
+}
+
+/* Absolute dot grid top right */
+.dot-grid-dac {
+    position: absolute;
+    top: 40px;
+    right: 32px;
+    display: grid;
+    grid-template-columns: repeat(3, 10px);
+    gap: 7px;
+}
+
+.dh {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.d-inact {
+    background: #444;
+}
+
+.d-risk .d-act {
+    background: #ff4444;
+}
+
+.d-watch .d-act {
+    background: #ffb800;
+}
+
+.d-track .d-act {
+    background: #00ff88;
+}
+
+/* Grid trick for accordion expansion */
+.dac-expander {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.d-active .dac-expander {
+    grid-template-rows: 1fr;
+}
+
+.dac-expander-inner {
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.d-active .dac-expander-inner {
+    opacity: 1;
+    transform: translateY(0);
+    padding-bottom: 32px;
+    /* Extra space before pill appears when active */
+}
+
+.dac-title {
+    font-size: clamp(24px, 2vw, 32px);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: #fff;
+    margin-bottom: 12px;
+    padding-right: 60px;
+    /* Space for dot grid */
+}
+
+.dac-desc {
+    font-size: 15px;
+    color: #888;
+    line-height: 1.7;
+    margin: 0;
+    /* padding handled safely in container */
+}
+
+/* Base pill styles (pill is fixed at bottom flow) */
+.dac-pill {
+    align-self: flex-start;
+    background: rgba(255, 255, 255, 0.10);
+    color: #fff;
+    border: none;
+    border-radius: 30px;
+    padding: 10px 24px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: default;
+    transition: background 0.4s ease;
+}
+
+.dac-pill:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+/* ================== HIGH-END ANIMATION ENHANCEMENTS ================== */
+
+/* 1. Scanning Laser Rim Light on Active Dark Cards */
+.dark-accordion-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 2px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, transparent 50%, rgba(255, 255, 255, 0.2) 100%);
+    background-size: 200% 200%;
+    -webkit-mask: linear-gradient(#111 0 0) content-box, linear-gradient(#111 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#111 0 0) content-box, linear-gradient(#111 0 0);
+    mask-composite: exclude;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.d-active::after {
+    opacity: 1;
+    animation: panRimLight 4s linear infinite;
+}
+
+/* Map the laser rim light to the specific active color */
+.d-risk::after {
+    background: linear-gradient(135deg, rgba(255, 68, 68, 0.6) 0%, transparent 50%, rgba(255, 68, 68, 0.6) 100%);
+    background-size: 200% 200%;
+}
+
+.d-watch::after {
+    background: linear-gradient(135deg, rgba(255, 184, 0, 0.6) 0%, transparent 50%, rgba(255, 184, 0, 0.6) 100%);
+    background-size: 200% 200%;
+}
+
+.d-track::after {
+    background: linear-gradient(135deg, rgba(0, 255, 136, 0.6) 0%, transparent 50%, rgba(0, 255, 136, 0.6) 100%);
+    background-size: 200% 200%;
+}
+
+@keyframes panRimLight {
+    0% {
+        background-position: 0% 0%;
+    }
+
+    50% {
+        background-position: 100% 100%;
+    }
+
+    100% {
+        background-position: 0% 0%;
+    }
+}
+
+/* 2. Live Matrix Pulsing on the Dot Grid */
+@keyframes matrixPulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(0.5);
+        opacity: 0.5;
+    }
+}
+
+/* Trigger only on active card, randomly staggering the dots */
+.d-active .dot-grid-dac .d-act:nth-child(even) {
+    animation: matrixPulse 2s infinite ease-in-out;
+}
+
+.d-active .dot-grid-dac .d-act:nth-child(odd) {
+    animation: matrixPulse 2s infinite ease-in-out 0.5s;
+}
+
+.d-active .dot-grid-dac .d-act:nth-child(3n) {
+    animation: matrixPulse 2s infinite ease-in-out 1s;
+}
+
+
+/* 3. Floating Emojis / Status Icons in White Cards */
+@keyframes floatingIcon {
+    0% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-6px);
+    }
+
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+.w-active .health-icon {
+    display: inline-block;
+    animation: floatingIcon 3s ease-in-out infinite;
+}
+
+/* ===================== PHASE 7: TEAM CTA SECTION ===================== */
+.team-cta-section {
+    position: relative;
+    background: #ffffff;
+    height: 560px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+/* 
+  Ticker sits at the VERTICAL CENTER of the section,
+  running behind the content (z-index 0 vs content z-index 2).
+*/
+.team-ticker-wrap {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    transform: translateY(-50%);
+    overflow: hidden;
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 0;
+    padding: 14px 0;
+    /* Fade out in center so ticker doesn't overlap content text */
+    -webkit-mask-image: linear-gradient(
+        to right,
+        transparent 0%,
+        rgba(0,0,0,1) 8%,
+        rgba(0,0,0,1) 26%,
+        transparent 36%,
+        transparent 64%,
+        rgba(0,0,0,1) 74%,
+        rgba(0,0,0,1) 92%,
+        transparent 100%
+    );
+    mask-image: linear-gradient(
+        to right,
+        transparent 0%,
+        rgba(0,0,0,1) 8%,
+        rgba(0,0,0,1) 26%,
+        transparent 36%,
+        transparent 64%,
+        rgba(0,0,0,1) 74%,
+        rgba(0,0,0,1) 92%,
+        transparent 100%
+    );
+}
+
+.team-ticker-track {
+    display: inline-flex;
+    align-items: center;
+    gap: 80px;
+    animation: tickerScroll 40s linear infinite;
+}
+
+.tt-item {
+    font-size: 26px;
+    font-weight: 500;
+    color: #c8c8c8;
+    letter-spacing: -0.01em;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.tt-sep {
+    display: inline-block;
+    width: 9px;
+    height: 9px;
+    background: #d4d4d4;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+@keyframes tickerScroll {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+/* Wave dot canvas */
+#wave-dot-canvas {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 60%;
+    pointer-events: none;
+    z-index: 1;
+    /* Fade dots: visible at edges, invisible in center where content sits */
+    -webkit-mask-image: radial-gradient(ellipse 55% 70% at 50% 100%,
+            rgba(0, 0, 0, 1) 30%,
+            rgba(0, 0, 0, 0.6) 55%,
+            transparent 80%);
+    mask-image: radial-gradient(ellipse 55% 70% at 50% 100%,
+            rgba(0, 0, 0, 1) 30%,
+            rgba(0, 0, 0, 0.6) 55%,
+            transparent 80%);
+}
+
+/* Center text block — sits above ticker AND dot grid */
+.team-cta-content {
+    position: relative;
+    z-index: 3;
+    text-align: center;
+    max-width: 600px;
+    padding: 0 32px;
+    /* No background — dots blend through naturally */
+}
+
+.team-cta-heading {
+    font-size: clamp(34px, 4vw, 54px);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 1.1;
+    color: #111;
+    margin-bottom: 18px;
+}
+
+.team-cta-sub {
+    font-size: 15px;
+    color: #666;
+    line-height: 1.75;
+    max-width: 480px;
+    margin: 0 auto 32px;
+}
+
+.team-cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: #d4e84d;
+    color: #111;
+    text-decoration: none;
+    border-radius: 50px;
+    padding: 15px 26px;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    transition: background 0.2s ease, transform 0.2s ease, gap 0.2s ease;
+    box-shadow: 0 4px 20px rgba(212, 232, 77, 0.35);
+}
+
+.team-cta-btn:hover {
+    background: #eaff5f;
+    transform: translateY(-3px);
+    gap: 18px;
+    box-shadow: 0 8px 30px rgba(212, 232, 77, 0.45);
+}
+
+.team-cta-arrow {
+    font-size: 18px;
+    line-height: 1;
+}
+
+/* ===================== PHASE 8: FOOTER (NEW DESIGN) ===================== */
+.main-footer {
+    background: #0e0e0e;
+    color: #fff;
+    padding: 72px var(--content-margin) 0;
+    border-radius: 24px 24px 0 0;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Top row: nav left, CTA right */
+.footer-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding-bottom: 64px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Nav link grid (2 columns) */
+.footer-nav-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 180px);
+    gap: 8px 32px;
+}
+
+.footer-nav-col {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.footer-nav-col a {
+    color: #999;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.footer-nav-col a:hover {
+    color: #fff;
+}
+
+/* CTA block right */
+.footer-cta-block {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 20px;
+}
+
+.footer-cta-label {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: #fff;
+    margin: 0;
+}
+
+.footer-email-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.footer-email-input {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 50px;
+    padding: 14px 24px;
+    color: #fff;
+    font-size: 15px;
+    width: 260px;
+    outline: none;
+    transition: border-color 0.3s ease, background 0.3s ease;
+}
+
+.footer-email-input::placeholder {
+    color: #666;
+}
+
+.footer-email-input:focus {
+    border-color: rgba(255, 255, 255, 0.35);
+    background: rgba(255, 255, 255, 0.09);
+}
+
+.footer-send-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #d4e84d;
+    color: #111;
+    border: none;
+    border-radius: 50px;
+    padding: 14px 24px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.footer-send-btn:hover {
+    background: #eaff5f;
+    transform: translateY(-2px);
+}
+
+.footer-send-arrow {
+    font-size: 18px;
+    line-height: 1;
+}
+
+/* Giant brand wordmark */
+.footer-brand-giant {
+    display: block;
+    padding-top: 12px;
+    margin-bottom: -12px;
+    line-height: 0.85;
+    white-space: nowrap;
+}
+
+/* Each letter clip: just an inline wrapper, no overflow clipping */
+.brand-letter-clip {
+    display: inline-block;
+    vertical-align: bottom;
+    line-height: 0.88;
+}
+
+/* The actual letter — clip-path masks from TOP, extends below so nothing is cut */
+.brand-letter {
+    display: inline-block;
+    font-size: clamp(120px, 18vw, 220px);
+    font-weight: 900;
+    letter-spacing: -0.06em;
+    color: #fff;
+    line-height: 0.85;
+    user-select: none;
+    /* clip from top (hidden), extend -30px below so bottom curves never get clipped */
+    clip-path: inset(110% 0 -30px 0);
+}
+
+/* Bottom bar */
+.footer-bottom-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0 24px;
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+    margin-top: 0;
+    font-size: 13px;
+    color: #666;
+}
+
+.footer-bottom-links {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+}
+
+.footer-bottom-links a {
+    color: #666;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.footer-bottom-links a:hover {
+    color: #fff;
+}
+
+.footer-credit {
+    color: #555;
+    font-size: 13px;
+}
+
+/* ===================== DASHBOARD LOADING OVERLAY ===================== */
+.dashboard-loader {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    background: #111111;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    animation: loader-fade-in 0.35s ease forwards;
+}
+
+@keyframes loader-fade-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+.loader-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 28px;
+}
+
+.loader-logo {
+    width: 80px;
+    height: 80px;
+    background: radial-gradient(130% 130% at 50% 100%, #00d2ff 0%, #2f3ce0 60%, #1e1b8b 100%);
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 40px rgba(47, 60, 224, 0.5), 0 0 80px rgba(0, 210, 255, 0.15);
+    animation: loader-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes loader-pulse {
+    0%, 100% { transform: scale(1);    box-shadow: 0 8px 40px rgba(47, 60, 224, 0.5), 0 0 80px rgba(0, 210, 255, 0.15); }
+    50%      { transform: scale(1.08); box-shadow: 0 12px 60px rgba(47, 60, 224, 0.7), 0 0 120px rgba(0, 210, 255, 0.25); }
+}
+
+.loader-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(255, 255, 255, 0.08);
+    border-top-color: #00d2ff;
+    border-radius: 50%;
+    animation: loader-spin 0.8s linear infinite;
+}
+
+@keyframes loader-spin {
+    to { transform: rotate(360deg); }
+}
+
+.loader-text {
+    font-size: 14px;
+    font-weight: 500;
+    color: #555;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+/* ── Nexus AI Guide chat (Let's Talk) ─────────────────────────────────── */
+.nexus-guide-chat {
+    position: fixed;
+    inset: 0;
+    z-index: 100000;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    padding: max(16px, env(safe-area-inset-bottom));
+    padding-right: max(24px, env(safe-area-inset-right));
+    padding-top: max(80px, env(safe-area-inset-top));
+    pointer-events: none;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.25s ease, visibility 0.25s;
+}
+
+.nexus-guide-chat.is-open {
+    pointer-events: auto;
+    visibility: visible;
+    opacity: 1;
+    display: flex !important;
+}
+
+.nexus-guide-chat-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(8, 10, 18, 0.45);
+    backdrop-filter: blur(6px);
+    cursor: pointer;
+}
+
+.nexus-guide-chat-panel {
+    position: relative;
+    width: min(420px, calc(100vw - 32px));
+    max-height: min(600px, calc(100vh - 100px));
+    display: flex;
+    flex-direction: column;
+    background: rgba(10, 11, 16, 0.85);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(0, 210, 255, 0.15);
+    border-radius: 20px;
+    box-shadow:
+        0 30px 80px rgba(0, 0, 0, 0.8),
+        inset 0 0 40px rgba(0, 210, 255, 0.05);
+    overflow: hidden;
+    font-family: 'Inter', sans-serif;
+    animation: slideUpFade 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes slideUpFade {
+    from { opacity: 0; transform: translateY(20px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Nexus Intelligence Headers */
+.nx-chat-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+    background: #0f1117;
+    border-bottom: 1px solid #2d3548;
+}
+
+.nx-chat-logo-wrap {
+    position: relative;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: #1a1f2e;
+    border: 1px solid #00d4ff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.nx-chat-logo {
+    color: #00d4ff;
+    font-weight: 800;
+    font-size: 18px;
+    letter-spacing: -1px;
+}
+
+.nx-chat-live-dot {
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
+    width: 10px;
+    height: 10px;
+    background: #10b981;
+    border-radius: 50%;
+    border: 2px solid #0f1117;
+    box-shadow: 0 0 8px #10b981;
+}
+
+.nx-chat-title-wrap {
+    flex: 1;
+}
+
+.nx-chat-title {
+    margin: 0;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+}
+
+.nx-chat-subtitle {
+    margin: 2px 0 0;
+    font-size: 12px;
+    color: #00d4ff;
+    font-weight: 500;
+}
+
+.nx-chat-close {
+    background: none;
+    border: none;
+    color: #8892b0;
+    font-size: 24px;
+    cursor: pointer;
+    line-height: 1;
+    transition: color 0.2s;
+}
+
+.nx-chat-close:hover {
+    color: #fff;
+}
+
+/* Chat Messages Area */
+.nx-chat-messages {
+    flex: 1;
+    background: #0f1117;
+    padding: 20px 18px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    scroll-behavior: smooth;
+}
+
+.nx-chat-messages::-webkit-scrollbar { width: 6px; }
+.nx-chat-messages::-webkit-scrollbar-track { background: #0f1117; }
+.nx-chat-messages::-webkit-scrollbar-thumb { background: #2d3548; border-radius: 10px; }
+
+/* Message Bubble Base */
+.nx-msg {
+    display: flex;
+    gap: 10px;
+    max-width: 90%;
+    animation: nxSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes nxSlideUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.nx-msg-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #1a1f2e;
+    border: 1px solid #00d4ff;
+    color: #00d4ff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.nx-msg-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.nx-msg-bubble {
+    padding: 12px 14px;
+    font-size: 13.5px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-break: break-word;
+    border-radius: 12px;
+}
+
+.nx-msg-time {
+    font-size: 10px;
+    color: #8892b0;
+}
+
+/* AI Messages */
+.nx-msg-ai {
+    align-self: flex-start;
+}
+
+.nx-msg-ai .nx-msg-time {
+    margin-left: 2px;
+}
+
+.nx-msg-ai .nx-msg-bubble {
+    background: #1a1f2e;
+    color: #e2e8f0;
+    border: 1px solid #2d3548;
+    border-top-left-radius: 2px;
+}
+
+/* User Messages */
+.nx-msg-user {
+    align-self: flex-end;
+    flex-direction: row-reverse;
+}
+
+.nx-msg-user .nx-msg-avatar {
+    border-color: #475569;
+    color: #94a3b8;
+}
+
+.nx-msg-user .nx-msg-time {
+    text-align: right;
+    margin-right: 2px;
+}
+
+.nx-msg-user .nx-msg-bubble {
+    background: #00d4ff;
+    color: #0f1117;
+    border-top-right-radius: 2px;
+    font-weight: 500;
+}
+
+/* Suggested Chips */
+.nx-chat-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 4px;
+    padding-left: 38px; /* Align with bubbles */
+}
+
+.nx-chip {
+    background: #1a1f2e;
+    border: 1px solid #2d3548;
+    color: #00d4ff;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+}
+
+.nx-chip:hover {
+    background: #2d3548;
+    border-color: #00d4ff;
+}
+
+/* Input Area */
+.nx-chat-form {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+    background: #0f1117;
+    border-top: 1px solid #2d3548;
+}
+
+.nx-chat-input {
+    flex: 1;
+    background: #1a1f2e;
+    border: 1px solid #2d3548;
+    color: #fff;
+    padding: 12px 14px;
+    border-radius: 8px;
+    font-size: 13.5px;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.nx-chat-input::placeholder {
+    color: #64748b;
+}
+
+.nx-chat-input:focus {
+    border-color: #00d4ff;
+}
+
+.nx-chat-send {
+    background: #00d4ff;
+    color: #0f1117;
+    border: none;
+    border-radius: 8px;
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.1s, opacity 0.2s;
+}
+
+.nx-chat-send:active {
+    transform: scale(0.92);
+}
+
+.nx-chat-send:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Loading Dots */
+.nx-typing {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #1a1f2e;
+    border: 1px solid #2d3548;
+    padding: 12px 16px;
+    border-radius: 12px;
+    border-top-left-radius: 2px;
+    color: #e2e8f0;
+    font-size: 13px;
+    font-style: italic;
+    width: fit-content;
+}
+
+.nx-dots {
+    display: flex;
+    gap: 4px;
+}
+
+.nx-dots span {
+    width: 6px;
+    height: 6px;
+    background: #00d4ff;
+    border-radius: 50%;
+    animation: nxDotBlink 1.4s infinite both;
+}
+
+.nx-dots span:nth-child(1) { animation-delay: -0.32s; }
+.nx-dots span:nth-child(2) { animation-delay: -0.16s; }
+
+@keyframes nxDotBlink {
+    0%, 80%, 100% { opacity: 0.2; transform: scale(0.8); }
+    40% { opacity: 1; transform: scale(1); }
+}
+
+/* Smooth scroll behavior for programmatic scroll */
+html {
+    scroll-behavior: smooth;
+}

@@ -1,0 +1,23 @@
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Python
+__pycache__/
+*.py[cod]
+
+# Google OAuth JSON credentials
+token.json
+credentials.json
+backend/token.json
+backend/credentials.json
+
+# Local text files with secrets
+tokens.txt
+backend/tokens.txt
+
+# Generated file for copy-pasting to Railway
+RAILWAY_ENV_VARS.txt

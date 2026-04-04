@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="nexus-api-root" content="" />
+    <title>NeoLeaf Nexus - Live Sprint Dashboard</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="dashboard.css">
+    
+    <!-- GSAP for Animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+</head>
+<body>
+    <!-- App Splash Loader -->
+    <div id="app-loader" class="loader">
+        <iframe src="Loading/index.html" style="width: 100%; height: 100%; border: none;"></iframe>
+        <div id="fake-loader-msg" class="fake-loader-message">Connecting to GitHub...</div>
+    </div>
+
+    <!-- Antigravity Background -->
+    <div class="d-antigravity-wrap">
+        <canvas id="antigravity-canvas"></canvas>
+    </div>
+
+    <!-- Header -->
+    <header class="d-header">
+        <div class="d-logo">
+            <div class="nexus-logo-icon">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <filter id="logo-drop-d" x="-30%" y="-30%" width="160%" height="160%">
+                            <feDropShadow dx="-1" dy="1.5" stdDeviation="1" flood-color="#021f59" flood-opacity="0.8"/>
+                        </filter>
+                    </defs>
+                    <g fill="#FFF" stroke="#FFF" stroke-width="0.5" stroke-linejoin="round" stroke-linecap="round">
+                        <path d="M5 3h3.5v18H5z"/>
+                        <path d="M15.5 3H19v18h-3.5z"/>
+                        <path d="M5 21h3.5L19 3h-3.5z"/>
+                    </g>
+                    <path d="M5 3h3.5L19 21h-3.5z" fill="#FFF" stroke="#FFF" stroke-width="0.5" stroke-linejoin="round" stroke-linecap="round" filter="url(#logo-drop-d)"/>
+                </svg>
+            </div>
+            <span>Nexus Dashboard</span>
+        </div>
+        
+        <div class="d-header-actions">
+            <button type="button" class="d-btn d-btn-outline" id="nexus-lets-talk-btn" title="Ask about workload and sprint data">
+                <svg class="d-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                Ask Nexus
+            </button>
+            <button class="d-btn d-btn-outline" id="run-health-btn">
+                <svg class="d-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M2.13 15.57a9 9 0 1 0 3.14-10.2L2.5 8M2.5 22v-6h6M21.87 8.43a9 9 0 1 0-3.14 10.2l2.77-2.63"/></svg>
+                Run Health Check
+            </button>
+        </div>
+    </header>
+
+    <main class="d-main">
+        <h1 class="d-title">Live Sprint Dashboard</h1>
+
+        <!-- Macro Metrics -->
+        <div class="d-metrics-row">
+            <div class="d-metric-card">
+                <span class="d-metric-label">Points at Risk</span>
+                <span class="d-metric-value val-red">14</span>
+            </div>
+            <div class="d-metric-card">
+                <span class="d-metric-label">Days Remaining</span>
+                <span class="d-metric-value val-white">3</span>
+            </div>
+            <div class="d-metric-card">
+                <span class="d-metric-label">Completion %</span>
+                <span class="d-metric-value val-green">68%</span>
+            </div>
+        </div>
+
+        <!-- Calendar Overview -->
+        <section class="d-calendar-section" id="calendar-section">
+            <h2 class="d-subtitle">
+                <svg class="d-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px;vertical-align:middle;margin-right:8px;color:var(--c-cyan)"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                Calendar Overview
+            </h2>
+
+            <div class="d-cal-metrics">
+                <div class="d-cal-stat">
+                    <span class="d-cal-stat-value" id="cal-meetings-count">—</span>
+                    <span class="d-cal-stat-label">Meetings Today</span>
+                </div>
+                <div class="d-cal-stat">
+                    <span class="d-cal-stat-value" id="cal-meeting-hours">—</span>
+                    <span class="d-cal-stat-label">Meeting Hours</span>
+                </div>
+                <div class="d-cal-stat">
+                    <span class="d-cal-stat-value val-green" id="cal-focus-hours">—</span>
+                    <span class="d-cal-stat-label">Focus Hours</span>
+                </div>
+                <div class="d-cal-stat">
+                    <span class="d-cal-stat-value" id="cal-ooo-count">—</span>
+                    <span class="d-cal-stat-label">OOO This Week</span>
+                </div>
+            </div>
+
+            <div class="d-cal-events" id="cal-events-list">
+                <div class="d-cal-loading">Loading calendar…</div>
+            </div>
+        </section>
+
+        <h2 class="d-subtitle">Active Tickets</h2>
+
+        <!-- Active Tickets Grid -->
+        <div class="d-tickets-grid" id="tickets-container">
+        </div>
+    </main>
+
+    <div id="nexus-guide-chat" class="nexus-guide-chat" aria-hidden="true" hidden>
+        <div class="nexus-guide-chat-backdrop" data-guide-close tabindex="-1"></div>
+        <div class="nexus-guide-chat-panel" id="nexus-guide-chat" role="dialog" aria-modal="true" aria-labelledby="nexus-guide-title">
+            <!-- CHAT HEADER -->
+            <div class="nx-chat-header">
+                <div class="nx-chat-logo-wrap">
+                    <div class="nx-chat-logo">N</div>
+                    <div class="nx-chat-live-dot"></div>
+                </div>
+                <div class="nx-chat-title-wrap">
+                    <h2 id="nexus-guide-title" class="nx-chat-title">Nexus Intelligence</h2>
+                    <p class="nx-chat-subtitle">Sprint AI Assistant</p>
+                </div>
+                <button type="button" class="nx-chat-close" id="nexus-guide-close" aria-label="Close chat">&times;</button>
+            </div>
+
+            <!-- MESSAGES AREA -->
+            <div class="nx-chat-messages" id="nexus-guide-messages">
+                
+                <!-- WELCOME MESSAGE -->
+                <div class="nx-msg nx-msg-ai">
+                    <div class="nx-msg-avatar">N</div>
+                    <div class="nx-msg-content">
+                        <div class="nx-msg-bubble">
+                            Hi! I'm Nexus, your sprint intelligence assistant. I'm monitoring your GitHub, Jira, Slack, and Calendar in real time. I've detected 2 critical blockers in your current sprint. How can I help?
+                        </div>
+                        <div class="nx-msg-time">Just now</div>
+                    </div>
+                </div>
+
+                <!-- SUGGESTED QUESTIONS -->
+                <div class="nx-chat-chips" id="nx-chat-chips">
+                    <button type="button" class="nx-chip">Who is most overloaded?</button>
+                    <button type="button" class="nx-chip">What's blocking AUTH-412?</button>
+                    <button type="button" class="nx-chip">Will we finish the sprint?</button>
+                    <button type="button" class="nx-chip">Which PRs need review?</button>
+                </div>
+
+            </div>
+
+            <!-- INPUT AREA -->
+            <form class="nx-chat-form" id="nexus-guide-form">
+                <input type="text" id="nexus-guide-input" class="nx-chat-input" placeholder="Ask Nexus anything about your sprint..." autocomplete="off" />
+                <button type="submit" class="nx-chat-send" id="nexus-guide-send">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script src="dashboard.js"></script>
+</body>
+</html>

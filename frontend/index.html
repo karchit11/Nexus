@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Set content="http://127.0.0.1:8008" if the page is opened from another port/host (e.g. Live Server) -->
+    <meta name="nexus-api-root" content="" />
+    <title>NeoLeaf - Premium Clone</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=2">
+
+    <!-- GSAP for scroll scrubbing -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.34/dist/lenis.min.js"></script> 
+</head>
+<body>
+    <!-- ===================== PRELOADER ===================== -->
+    <div id="preloader">
+        <div class="preloader-content">
+            <svg id="preloader-svg" viewBox="0 0 1000 300" style="width: 100%; height: auto;">
+                <defs>
+                    <clipPath id="text-mask">
+                        <text x="50%" y="50%" text-anchor="middle" dominant-baseline="central" font-size="180" font-weight="900" font-family="'Inter', sans-serif" letter-spacing="-5">Nexus</text>
+                    </clipPath>
+                </defs>
+                
+                <!-- Base text -->
+                <text x="50%" y="50%" text-anchor="middle" dominant-baseline="central" font-size="180" font-weight="900" font-family="'Inter', sans-serif" fill="#3a3a3a" letter-spacing="-5">Nexus</text>
+                
+                <!-- Wave fill -->
+                <g clip-path="url(#text-mask)">
+                    <path id="wave-path" fill="#ffffff" d="M -1000 250 Q -875 220 -750 250 T -500 250 T -250 250 T 0 250 T 250 250 T 500 250 T 750 250 T 1000 250 T 1250 250 T 1500 250 T 1750 250 T 2000 250 L 2000 500 L -1000 500 Z" />
+                </g>
+
+                <!-- percentage text -->
+                <text x="74%" y="78%" id="loading-percent" text-anchor="end" font-size="19" font-weight="600" font-family="'Inter', sans-serif" fill="#ffffff">loading... 0 %</text>
+            </svg>
+        </div>
+    </div>
+
+    <!-- Header matching the screenshots exactly -->
+    <header class="header">
+        <div class="header-left">
+            <div class="logo">
+               <div class="nexus-logo-icon">
+                   <svg viewBox="0 0 24 24" width="22" height="22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                       <defs>
+                           <filter id="logo-drop" x="-30%" y="-30%" width="160%" height="160%">
+                               <!-- Casts the dark blue shadow from the front diagonal onto the back -->
+                               <feDropShadow dx="-1" dy="1.5" stdDeviation="1" flood-color="#021f59" flood-opacity="0.8"/>
+                           </filter>
+                       </defs>
+                       <!-- Back Elements: Pillars and the Bottom-Left to Top-Right diagonal -->
+                       <g fill="#FFF" stroke="#FFF" stroke-width="0.5" stroke-linejoin="round" stroke-linecap="round">
+                           <!-- Left Pillar -->
+                           <path d="M5 3h3.5v18H5z"/>
+                           <!-- Right Pillar -->
+                           <path d="M15.5 3H19v18h-3.5z"/>
+                           <!-- Back Diagonal / -->
+                           <path d="M5 21h3.5L19 3h-3.5z"/>
+                       </g>
+                       <!-- Front Element: Top-Left to Bottom-Right diagonal (casts shadow) -->
+                       <path d="M5 3h3.5L19 21h-3.5z" fill="#FFF" stroke="#FFF" stroke-width="0.5" stroke-linejoin="round" stroke-linecap="round" filter="url(#logo-drop)"/>
+                   </svg>
+               </div>
+               <span>Nexus</span>
+            </div>
+            <nav class="nav-links">
+                <a href="#technology" data-scroll>Features</a>
+                <a href="#products" data-scroll>How it Works</a>
+                <a href="/dashboard" data-dashboard>Dashboard</a>
+                <a href="#key-features" data-scroll>Key Features</a>
+            </nav>
+        </div>
+        <div class="header-right">
+            <button type="button" class="nav-btn" id="nexus-lets-talk-btn" aria-haspopup="dialog">Let's Talk!</button>
+        </div>
+        
+    </header>
+
+    <main>
+        <!-- This entire section is pinned to the screen during the first timeline -->
+        <div class="hero-pinned-section">
+            
+            <div class="video-container">
+                <!-- Video plays continuously -->
+                <video id="hero-video" src="intro.mp4" autoplay loop muted playsinline></video>
+            </div>
+
+            <!-- Absolute Text Layer floating exactly over the video grid -->
+            <div class="text-layer">
+                <div class="text-top">
+                    <!-- These are initially blurred/invisible -->
+                    <span class="subtitle">FAST, SECURE AND SCALABLE</span>
+                    
+                    <!-- This sits planted over the video from Frame 1 -->
+                    <h1 class="main-title">Never Miss Another Sprint<br>Blocker</h1>
+                </div>
+                
+                <!-- This block is initially blurred/invisible -->
+                <div class="text-bottom">
+                    <p class="description">AI-powered monitoring across GitHub, Jira, Slack, and calendars to surface risks before they derail your sprint</p>
+                    <div class="button-group">
+                        <button class="try-btn" data-dashboard>Try it now</button>
+                        <button class="arrow-btn" data-dashboard>→</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ===================== PHASE 2: TICKER ===================== -->
+        <div class="ticker-section">
+            <div class="ticker-track">
+                <div class="ticker-inner">
+                    <span class="ticker-item">autonomous <span class="ticker-icon">◈</span></span>
+                    <span class="ticker-item">proactive <span class="ticker-icon">◈</span></span>
+                    <span class="ticker-item">headless <span class="ticker-icon">◈</span></span>
+                    <span class="ticker-item">real-time <span class="ticker-icon">◈</span></span>
+                    <span class="ticker-item">intelligent <span class="ticker-icon">◈</span></span>
+                    <span class="ticker-item">blocker-free <span class="ticker-icon">◈</span></span>
+                    <span class="ticker-item">mcp-powered <span class="ticker-icon">◈</span></span>
+                    <span class="ticker-item">cognitive <span class="ticker-icon">◈</span></span>
+                    <span class="ticker-item">neural <span class="ticker-icon">◈</span></span>
+                    <!-- Duplicate for seamless loop -->
+                    <span class="ticker-item">autonomous <span class="ticker-icon">◈</span></span>
+                    <span class="ticker-item">proactive <span class="ticker-icon">◈</span></span>
+                    <span class="ticker-item">headless <span class="ticker-icon">◈</span></span>
+                    <span class="ticker-item">real-time <span class="ticker-icon">◈</span></span>
+                    <span class="ticker-item">intelligent <span class="ticker-icon">◈</span></span>
+                    <span class="ticker-item">blocker-free <span class="ticker-icon">◈</span></span>
+                    <span class="ticker-item">mcp-powered <span class="ticker-icon">◈</span></span>
+                    <span class="ticker-item">cognitive <span class="ticker-icon">◈</span></span>
+                    <span class="ticker-item">neural <span class="ticker-icon">◈</span></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===================== PHASE 3: TECHNOLOGY SECTION ===================== -->
+        <section class="tech-section" id="technology">
+            <div class="tech-content">
+                <span class="section-label">FEATURES</span>
+                <h2 class="tech-heading">AI that watches your sprint<br>so you don't have to</h2>
+                <div class="tech-body">
+                    <p>Nexus connects to GitHub, Jira, Slack, and Google Calendar via MCP to autonomously detect blockers. No dashboards. No manual check-ins. It works like a real co-worker running in the background.</p>
+                </div>
+            </div>
+            <!-- Canvas-based particle morph portrait -->
+            <canvas id="dot-canvas"></canvas>
+            <!-- Dot grid background decoration bottom-left -->
+            <div class="dot-grid"></div>
+        </section>
+        <!-- ===================== PHASE 4: PRODUCTS SECTION ===================== -->
+        <section class="products-section" id="products">
+            <div class="products-container">
+                <span class="section-label">How it Works</span>
+                <h2 class="products-heading">How Nexus Works</h2>
+                
+                <div class="products-grid">
+                    <!-- Card 1: Connect (Wide Card) -->
+                    <div class="product-card card-wide">
+                        <div class="card-bg-wrap"><div class="card-bg"></div></div>
+                        <div class="card-icon">
+                            <svg viewBox="0 0 24 24" fill="none" class="icon-svg">
+                                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <div class="card-content">
+                            <h3>Connect</h3>
+                            <p>Link GitHub, Jira, Slack, and Google Calendar in minutes.<br>No complex setup required.</p>
+                        </div>
+                        <div class="card-ui-widget">
+                            <div class="widget-header">Integrations active:</div>
+                            <div class="widget-body">GitHub · Jira · Slack · Calendar|</div>
+                            <button class="widget-btn">Connect Now</button>
+                        </div>
+                    </div>
+
+                    <!-- Card 2: Scan -->
+                    <div class="product-card card-half">
+                        <div class="card-bg-wrap"><div class="card-bg"></div></div>
+                        <div class="card-icon">
+                            <svg viewBox="0 0 24 24" fill="none" class="icon-svg">
+                                <path d="M3 9V5a2 2 0 0 1 2-2h4M3 15v4a2 2 0 0 0 2 2h4M21 9V5a2 2 0 0 0-2-2h-4M21 15v4a2 2 0 0 1-2 2h-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                <rect x="8" y="8" width="8" height="8" rx="1" stroke="currentColor" stroke-width="2"/>
+                            </svg>
+                        </div>
+                        <div class="card-content">
+                            <h3>Scan</h3>
+                            <p>Nexus continuously reads all activity across your tools — PRs, tickets, messages, and calendars.</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 3: Detect -->
+                    <div class="product-card card-half">
+                        <div class="card-bg-wrap"><div class="card-bg"></div></div>
+                        <div class="card-icon">
+                            <svg viewBox="0 0 24 24" fill="none" class="icon-svg">
+                                <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
+                                <path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.93 4.93l2.12 2.12M16.95 16.95l2.12 2.12M4.93 19.07l2.12-2.12M16.95 7.05l2.12-2.12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <div class="card-content">
+                            <h3>Detect</h3>
+                            <p>AI identifies silent blockers — failing CI, stuck tickets, OOO assignees, and unanswered requests.</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 4: Alert -->
+                    <div class="product-card card-half">
+                        <div class="card-bg-wrap"><div class="card-bg"></div></div>
+                        <div class="card-icon">
+                            <svg viewBox="0 0 24 24" fill="none" class="icon-svg">
+                                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <div class="card-content">
+                            <h3>Alert</h3>
+                            <p>Nexus posts directly to Slack with the blocker details, context, and a suggested fix — no dashboard needed.</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 5: Track -->
+                    <div class="product-card card-half">
+                        <div class="card-bg-wrap"><div class="card-bg"></div></div>
+                        <div class="card-icon">
+                            <svg viewBox="0 0 24 24" fill="none" class="icon-svg">
+                                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <div class="card-content">
+                            <h3>Track</h3>
+                            <p>Monitors resolution progress and follows up automatically until the blocker is cleared.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== PHASE 5: EXPERTISE SECTION (NEXUS MONITORING) ===================== -->
+        <section class="expertise-section" id="expertise">
+            <div class="expertise-header-wrap">
+                <span class="section-label">EXPERTISE</span>
+                <nav class="expertise-tabs">
+                    <button class="tab-btn active" data-target="tab-github">GitHub Monitoring</button>
+                    <button class="tab-btn" data-target="tab-jira">Jira Integration</button>
+                    <button class="tab-btn" data-target="tab-calendar">Calendar Awareness</button>
+                    <button class="tab-btn" data-target="tab-slack">Slack Monitoring</button>
+                </nav>
+            </div>
+            
+            <div class="tabs-container">
+                <!-- ================== TAB 1: GITHUB ================== -->
+                <div class="tab-pane active" id="tab-github">
+                    <div class="expertise-content">
+                        <!-- Left side -->
+                        <div class="expertise-left">
+                            <h2 class="expertise-big-heading">GitHub Monitoring</h2>
+                            <p class="expertise-subtitle">Open PRs, CI failures, commit age, and review bottlenecks surfaced in one place.</p>
+                            
+                            <div class="mini-data-card mdc-github">
+                                <div class="mdc-header">
+                                    <span>GitHub</span>
+                                    <span>Live PR health</span>
+                                </div>
+                                <div class="mdc-body">
+                                    <div class="mdc-row"><span>Open PRs</span><span class="val-cyan" id="stat-gh-prs">—</span></div>
+                                    <div class="mdc-row"><span>Failing CI</span><span class="val-red" id="stat-gh-ci">—</span></div>
+                                    <div class="mdc-row"><span>Stale reviews</span><span class="val-orange" id="stat-gh-stale">—</span></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right side -->
+                        <div class="expertise-right">
+                            <div class="stacked-cards">
+                                <!-- Card A -->
+                                <div class="stacked-card">
+                                    <div class="stacked-header">
+                                        <div class="stacked-icon">
+                                            <!-- GitHub cat cyan -->
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5c.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34c-.45-1.15-1.11-1.46-1.11-1.46c-.9-.62.07-.6.07-.6c1 .07 1.53 1.03 1.53 1.03c.87 1.52 2.34 1.07 2.91.83c.09-.65.35-1.09.63-1.34c-2.22-.25-4.55-1.11-4.55-4.92c0-1.11.38-2 1.03-2.71c-.1-.25-.45-1.29.1-2.64c0 0 .84-.27 2.75 1.02c.79-.22 1.65-.33 2.5-.33c.85 0 1.71.11 2.5.33c1.91-1.29 2.75-1.02 2.75-1.02c.55 1.35.2 2.39.1 2.64c.65.71 1.03 1.6 1.03 2.71c0 3.82-2.34 4.66-4.57 4.91c.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2z"/></svg>
+                                        </div>
+                                        <h3>GitHub Integration</h3>
+                                    </div>
+                                    <p>Automatically tracks all open PRs, their age, CI status, review activity, and merge readiness. Surfaces problems before they become bottlenecks.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ================== TAB 2: JIRA ================== -->
+                <div class="tab-pane" id="tab-jira">
+                    <div class="expertise-content">
+                        <!-- Left side -->
+                        <div class="expertise-left">
+                            <h2 class="expertise-big-heading">Jira Integration</h2>
+                            <p class="expertise-subtitle">Sprint tickets, due dates, blockers, and assignee status kept in sync with reality.</p>
+                            
+                            <div class="mini-data-card mdc-jira">
+                                <div class="mdc-header">
+                                    <span>Jira</span>
+                                    <span>Sprint board</span>
+                                </div>
+                                <div class="mdc-body">
+                                    <div class="mdc-row"><span>In progress</span><span class="val-cyan" id="stat-jira-progress">—</span></div>
+                                    <div class="mdc-row"><span>Blocked</span><span class="val-orange" id="stat-jira-blocked">—</span></div>
+                                    <div class="mdc-row"><span>Done this sprint</span><span class="val-green" id="stat-jira-done">—</span></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right side -->
+                        <div class="expertise-right">
+                            <div class="stacked-cards">
+                                <!-- Card A -->
+                                <div class="stacked-card">
+                                    <div class="stacked-header">
+                                        <div class="stacked-icon">
+                                            <!-- Alert circle cyan -->
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+                                        </div>
+                                        <h3>Jira Sync</h3>
+                                    </div>
+                                    <p>Monitors sprint tickets, due dates, blockers, and assignee status. Detects when tickets are stuck or when assignees are unavailable.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ================== TAB 3: CALENDAR ================== -->
+                <div class="tab-pane" id="tab-calendar">
+                    <div class="expertise-content">
+                        <!-- Left side -->
+                        <div class="expertise-left">
+                            <h2 class="expertise-big-heading">Calendar Awareness</h2>
+                            <p class="expertise-subtitle">Assignee availability, OOO, and meeting load so ownership never goes dark.</p>
+                            
+                            <div class="mini-data-card mdc-calendar">
+                                <div class="mdc-header">
+                                    <span>Calendar</span>
+                                    <span>Team load</span>
+                                </div>
+                                <div class="mdc-body">
+                                    <div class="mdc-row"><span>OOO assignees</span><span class="val-orange" id="stat-cal-ooo">—</span></div>
+                                    <div class="mdc-row"><span>Heavy meeting day</span><span class="val-cyan" id="stat-cal-heavy">—</span></div>
+                                    <div class="mdc-row"><span>Focus blocks</span><span class="val-green" id="stat-cal-focus">—</span></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right side -->
+                        <div class="expertise-right">
+                            <div class="stacked-cards">
+                                <!-- Card B -->
+                                <div class="stacked-card">
+                                    <div class="stacked-header">
+                                        <div class="stacked-icon">
+                                            <!-- Calendar cyan -->
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                                        </div>
+                                        <h3>Calendar Intelligence</h3>
+                                    </div>
+                                    <p>Knows when assignees are OOO, in meetings, or unavailable. Flags tickets at risk due to team member availability.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ================== TAB 4: SLACK ================== -->
+                <div class="tab-pane" id="tab-slack">
+                    <div class="expertise-content">
+                        <!-- Left side -->
+                        <div class="expertise-left">
+                            <h2 class="expertise-big-heading">Slack Monitoring</h2>
+                            <p class="expertise-subtitle">Help requests, blocked threads, and urgent pings detected before they go cold.</p>
+                            
+                            <div class="mini-data-card mdc-slack">
+                                <div class="mdc-header">
+                                    <span>Slack</span>
+                                    <span>Help channels</span>
+                                </div>
+                                <div class="mdc-body">
+                                    <div class="mdc-row"><span>Unanswered questions</span><span class="val-orange" id="stat-slack-unanswered">—</span></div>
+                                    <div class="mdc-row"><span>Blocked threads</span><span class="val-red" id="stat-slack-blocked">—</span></div>
+                                    <div class="mdc-row"><span>Channels monitored</span><span class="val-cyan" id="stat-slack-channels">—</span></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right side -->
+                        <div class="expertise-right">
+                            <div class="stacked-cards">
+                                <!-- Card A -->
+                                <div class="stacked-card">
+                                    <div class="stacked-header">
+                                        <div class="stacked-icon">
+                                            <!-- Slack hash cyan -->
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></svg>
+                                        </div>
+                                        <h3>Slack Awareness</h3>
+                                    </div>
+                                    <p>Scans help channels for unanswered questions, blocked developers, and urgent requests that might be slipping through the cracks.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ===================== PHASE 6: KEY FEATURES SECTION ===================== -->
+        <section class="features-section" id="key-features">
+            <!-- Tall wrapper drives the scroll distance -->
+            <div class="health-pin-wrapper">
+                <div class="health-sticky-inner">
+
+                    <div class="health-header-wrapper">
+                        <span class="section-label">Key Features</span>
+                        <h2 class="features-heading">Know your sprint health at a glance</h2>
+                        <p class="features-subtext">Three simple categories. One clear picture.</p>
+                    </div>
+
+                    <div class="health-content-grid">
+                        <!-- LEFT: White Health Cards (acting as visuals) -->
+                        <div class="health-visuals-panel">
+
+                            <!-- Ambient Glassmorphism Glow -->
+                            <div class="health-ambient-glow glow-risk"></div>
+
+                        <!-- Card 1: AT RISK -->
+                        <div class="health-card white-card w-active w-risk">
+                            <div class="health-card-header">
+                                <span class="health-icon">⚠️</span>
+                                <span class="health-title">AT RISK</span>
+                            </div>
+                            <p class="health-subtitle">Critical blockers that need immediate attention</p>
+                            <ul class="health-list">
+                                <li>PRs failing CI for 48+ hours</li>
+                                <li>Blocked tickets with OOO assignees</li>
+                                <li>Unanswered help requests 24h+</li>
+                            </ul>
+                        </div>
+
+                        <!-- Card 2: WATCH -->
+                        <div class="health-card white-card w-watch">
+                            <div class="health-card-header">
+                                <span class="health-icon">🕓</span>
+                                <span class="health-title">WATCH</span>
+                            </div>
+                            <p class="health-subtitle">Items trending toward problems if not addressed</p>
+                            <ul class="health-list">
+                                <li>PRs with no reviews for 24h+</li>
+                                <li>Tickets approaching due dates</li>
+                                <li>Low team bandwidth this week</li>
+                            </ul>
+                        </div>
+
+                        <!-- Card 3: ON TRACK -->
+                        <div class="health-card white-card w-track">
+                            <div class="health-card-header">
+                                <span class="health-icon">✅</span>
+                                <span class="health-title">ON TRACK</span>
+                            </div>
+                            <p class="health-subtitle">Everything moving smoothly</p>
+                            <ul class="health-list">
+                                <li>PRs reviewed and passing CI</li>
+                                <li>Tickets progressing on schedule</li>
+                                <li>Team velocity normal</li>
+                            </ul>
+                        </div>
+                    </div><!-- /.health-visuals-panel -->
+
+                    <!-- RIGHT: Dark Accordion Cards -->
+                    <div class="health-accordion-panel">
+                        
+                        <!-- Accordion 1 -->
+                        <div class="dark-accordion-card d-active d-risk" data-idx="0">
+                            <div class="dot-grid-dac">
+                                <span class="dh d-inact"></span><span class="dh d-act"></span><span class="dh d-act"></span>
+                                <span class="dh d-act"></span><span class="dh d-inact"></span><span class="dh d-act"></span>
+                                <span class="dh d-act"></span><span class="dh d-act"></span><span class="dh d-inact"></span>
+                            </div>
+                            <!-- Expandable Wrapper -->
+                            <div class="dac-expander">
+                                <div class="dac-expander-inner">
+                                    <h3 class="dac-title">At Risk Detection</h3>
+                                    <p class="dac-desc">Nexus instantly flags critical blockers — failing CI, stuck tickets, and OOO assignees — before they derail your sprint.</p>
+                                </div>
+                            </div>
+                            <button class="dac-pill">At Risk</button>
+                        </div>
+
+                        <!-- Accordion 2 -->
+                        <div class="dark-accordion-card d-watch" data-idx="1">
+                            <div class="dot-grid-dac">
+                                <span class="dh d-inact"></span><span class="dh d-act"></span><span class="dh d-act"></span>
+                                <span class="dh d-act"></span><span class="dh d-inact"></span><span class="dh d-act"></span>
+                                <span class="dh d-act"></span><span class="dh d-act"></span><span class="dh d-inact"></span>
+                            </div>
+                            <div class="dac-expander">
+                                <div class="dac-expander-inner">
+                                    <h3 class="dac-title">Watch &amp; Early Warning</h3>
+                                    <p class="dac-desc">Nexus monitors trending issues — stale PRs, approaching deadlines, and low team bandwidth — so nothing sneaks up on you.</p>
+                                </div>
+                            </div>
+                            <button class="dac-pill">Watch</button>
+                        </div>
+
+                        <!-- Accordion 3 -->
+                        <div class="dark-accordion-card d-track" data-idx="2">
+                            <div class="dot-grid-dac">
+                                <span class="dh d-inact"></span><span class="dh d-act"></span><span class="dh d-act"></span>
+                                <span class="dh d-act"></span><span class="dh d-inact"></span><span class="dh d-act"></span>
+                                <span class="dh d-act"></span><span class="dh d-act"></span><span class="dh d-inact"></span>
+                            </div>
+                            <div class="dac-expander">
+                                <div class="dac-expander-inner">
+                                    <h3 class="dac-title">On Track Visibility</h3>
+                                    <p class="dac-desc">See everything running smoothly at a glance. Nexus confirms PRs are passing, tickets are progressing, and team velocity is normal.</p>
+                                </div>
+                            </div>
+                            <button class="dac-pill">On Track</button>
+                        </div>
+
+                    </div><!-- /.health-accordion-panel -->
+                    </div><!-- /.health-content-grid -->
+
+                </div><!-- /.health-sticky-inner -->
+            </div><!-- /.health-pin-wrapper -->
+
+        </section>
+    </main>
+
+    <!-- ===================== PHASE 7: TEAM CTA SECTION ===================== -->
+    <section class="team-cta-section">
+
+        <!-- Scrolling ticker row -->
+        <div class="team-ticker-wrap">
+            <div class="team-ticker-track">
+                <span class="tt-item">autonomous <span class="tt-sep"></span></span>
+                <span class="tt-item">proactive <span class="tt-sep"></span></span>
+                <span class="tt-item">headless <span class="tt-sep"></span></span>
+                <span class="tt-item">MCP <span class="tt-sep"></span></span>
+                <span class="tt-item">GitHub <span class="tt-sep"></span></span>
+                <span class="tt-item">Jira <span class="tt-sep"></span></span>
+                <span class="tt-item">Slack <span class="tt-sep"></span></span>
+                <span class="tt-item">real-time <span class="tt-sep"></span></span>
+                <span class="tt-item">blocker-free <span class="tt-sep"></span></span>
+                <span class="tt-item">intelligent <span class="tt-sep"></span></span>
+                <!-- Duplicate for seamless loop -->
+                <span class="tt-item">autonomous <span class="tt-sep"></span></span>
+                <span class="tt-item">proactive <span class="tt-sep"></span></span>
+                <span class="tt-item">headless <span class="tt-sep"></span></span>
+                <span class="tt-item">MCP <span class="tt-sep"></span></span>
+                <span class="tt-item">GitHub <span class="tt-sep"></span></span>
+                <span class="tt-item">Jira <span class="tt-sep"></span></span>
+                <span class="tt-item">Slack <span class="tt-sep"></span></span>
+                <span class="tt-item">real-time <span class="tt-sep"></span></span>
+                <span class="tt-item">blocker-free <span class="tt-sep"></span></span>
+                <span class="tt-item">intelligent <span class="tt-sep"></span></span>
+            </div>
+        </div>
+
+        <!-- Animated wave dot grid (canvas) -->
+        <canvas id="wave-dot-canvas"></canvas>
+
+        <!-- Center content -->
+        <div class="team-cta-content">
+            <h2 class="team-cta-heading">Trusted by teams<br>who ship faster</h2>
+            <p class="team-cta-sub">Nexus runs silently in the background while your team stays focused. No dashboards. No manual check-ins. Just fewer missed deadlines.</p>
+            <a href="/dashboard" class="team-cta-btn" data-dashboard>
+                Get started
+                <span class="team-cta-arrow">→</span>
+            </a>
+        </div>
+
+    </section>
+
+    <!-- ===================== PHASE 7: FOOTER ===================== -->
+    <footer class="main-footer">
+
+        <!-- Top row: nav left + CTA right -->
+        <div class="footer-top">
+            <div class="footer-nav-grid">
+                <div class="footer-nav-col">
+                    <a href="#technology">Features</a>
+                    <a href="#products">How it Works</a>
+                </div>
+                <div class="footer-nav-col">
+                    <a href="#expertise">Expertise</a>
+                    <a href="#key-features">Key Features</a>
+                </div>
+            </div>
+
+            <div class="footer-cta-block">
+                <p class="footer-cta-label">Still have questions?</p>
+                <div class="footer-email-row">
+                    <input type="email" placeholder="Enter your email" class="footer-email-input" id="footer-email" />
+                    <button class="footer-send-btn" aria-label="Send">
+                        Send
+                        <span class="footer-send-arrow">→</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Giant brand name — letters wrapped for baseline reveal animation -->
+        <div class="footer-brand-giant" id="footer-nexus-wordmark">
+            <span class="brand-letter-clip"><span class="brand-letter">N</span></span><!--
+         --><span class="brand-letter-clip"><span class="brand-letter">e</span></span><!--
+         --><span class="brand-letter-clip"><span class="brand-letter">x</span></span><!--
+         --><span class="brand-letter-clip"><span class="brand-letter">u</span></span><!--
+         --><span class="brand-letter-clip"><span class="brand-letter">s</span></span>
+        </div>
+
+        <!-- Bottom bar -->
+        <div class="footer-bottom-bar">
+            <p>© 2025 Nexus. All rights reserved.</p>
+            <div class="footer-bottom-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Cookies Policy</a>
+                <span class="footer-credit">Built for Hackathon 2026</span>
+            </div>
+        </div>
+
+    </footer>
+
+    <!-- Nexus AI Guide (Groq) — opened from header Let's Talk -->
+    <div id="nexus-guide-chat" class="nexus-guide-chat" aria-hidden="true" hidden>
+        <div class="nexus-guide-chat-backdrop" data-guide-close tabindex="-1"></div>
+        <div class="nexus-guide-chat-panel" role="dialog" aria-modal="true" aria-labelledby="nexus-guide-title">
+            <!-- CHAT HEADER -->
+            <div class="nx-chat-header">
+                <div class="nx-chat-logo-wrap">
+                    <div class="nx-chat-logo">N</div>
+                    <div class="nx-chat-live-dot"></div>
+                </div>
+                <div class="nx-chat-title-wrap">
+                    <h2 id="nexus-guide-title" class="nx-chat-title">Nexus Intelligence</h2>
+                    <p class="nx-chat-subtitle">Sprint AI Assistant</p>
+                </div>
+                <button type="button" class="nx-chat-close" data-guide-close aria-label="Close chat">&times;</button>
+            </div>
+
+            <!-- MESSAGES AREA -->
+            <div class="nx-chat-messages" id="nexus-guide-messages">
+                
+                <!-- WELCOME MESSAGE -->
+                <div class="nx-msg nx-msg-ai">
+                    <div class="nx-msg-avatar">N</div>
+                    <div class="nx-msg-content">
+                        <div class="nx-msg-bubble">
+                            Hi! I'm Nexus, your sprint intelligence assistant. I'm monitoring your GitHub, Jira, Slack, and Calendar in real time. I've detected 2 critical blockers in your current sprint. How can I help?
+                        </div>
+                        <div class="nx-msg-time">Just now</div>
+                    </div>
+                </div>
+
+                <!-- SUGGESTED QUESTIONS -->
+                <div class="nx-chat-chips" id="nx-chat-chips">
+                    <button type="button" class="nx-chip">Who is most overloaded?</button>
+                    <button type="button" class="nx-chip">What's blocking AUTH-412?</button>
+                    <button type="button" class="nx-chip">Will we finish the sprint?</button>
+                    <button type="button" class="nx-chip">Which PRs need review?</button>
+                </div>
+
+            </div>
+
+            <!-- INPUT AREA -->
+            <form class="nx-chat-form" id="nexus-guide-form">
+                <input type="text" id="nexus-guide-input" class="nx-chat-input" placeholder="Ask Nexus anything about your sprint..." autocomplete="off" />
+                <button type="submit" class="nx-chat-send" id="nexus-guide-send">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Dashboard Loading Overlay -->
+    <div id="dashboard-loader" class="dashboard-loader" style="display:none">
+        <div class="loader-content">
+            <div class="loader-logo">
+                <svg viewBox="0 0 24 24" width="48" height="48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <g fill="#FFF" stroke="#FFF" stroke-width="0.5" stroke-linejoin="round" stroke-linecap="round">
+                        <path d="M5 3h3.5v18H5z"/>
+                        <path d="M15.5 3H19v18h-3.5z"/>
+                        <path d="M5 21h3.5L19 3h-3.5z"/>
+                    </g>
+                    <path d="M5 3h3.5L19 21h-3.5z" fill="#FFF" stroke="#FFF" stroke-width="0.5" stroke-linejoin="round" stroke-linecap="round"/>
+                </svg>
+            </div>
+            <div class="loader-spinner"></div>
+            <span class="loader-text">Loading Dashboard</span>
+        </div>
+    </div>
+
+    <script src="script.js?v=5"></script>
+</body>
+</html>

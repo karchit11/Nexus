@@ -1,0 +1,94 @@
+INFO:     Started server process [23636]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8008 (Press CTRL+C to quit)
+Traceback (most recent call last):
+  File "C:\Users\paras\OneDrive\Desktop\final\backend\backend.py", line 726, in calendar_stats
+    print(f"[CALENDAR DEBUG] Query range today: {sot_iso} \u2192 {eot_iso}")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python314\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2192' in position 62: character maps to <undefined>
+Traceback (most recent call last):
+  File "C:\Users\paras\OneDrive\Desktop\final\backend\backend.py", line 726, in calendar_stats
+    print(f"[CALENDAR DEBUG] Query range today: {sot_iso} \u2192 {eot_iso}")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python314\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2192' in position 62: character maps to <undefined>
+Traceback (most recent call last):
+  File "C:\Users\paras\OneDrive\Desktop\final\backend\backend.py", line 726, in calendar_stats
+    print(f"[CALENDAR DEBUG] Query range today: {sot_iso} \u2192 {eot_iso}")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python314\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2192' in position 62: character maps to <undefined>
+Traceback (most recent call last):
+  File "C:\Users\paras\OneDrive\Desktop\final\backend\backend.py", line 726, in calendar_stats
+    print(f"[CALENDAR DEBUG] Query range today: {sot_iso} \u2192 {eot_iso}")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python314\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2192' in position 62: character maps to <undefined>
+Traceback (most recent call last):
+  File "C:\Users\paras\OneDrive\Desktop\final\backend\backend.py", line 726, in calendar_stats
+    print(f"[CALENDAR DEBUG] Query range today: {sot_iso} \u2192 {eot_iso}")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python314\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2192' in position 62: character maps to <undefined>
+Traceback (most recent call last):
+  File "C:\Users\paras\OneDrive\Desktop\final\backend\backend.py", line 587, in sprint_health
+    text = ask_gemini(prompt, json_mode=True)
+  File "C:\Users\paras\OneDrive\Desktop\final\backend\backend.py", line 135, in ask_gemini
+    chat = groq_client.chat.completions.create(**params)
+  File "C:\Users\paras\AppData\Roaming\Python\Python314\site-packages\groq\resources\chat\completions.py", line 461, in create
+    return self._post(
+           ~~~~~~~~~~^
+        "/openai/v1/chat/completions",
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<45 lines>...
+        stream_cls=Stream[ChatCompletionChunk],
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\paras\AppData\Roaming\Python\Python314\site-packages\groq\_base_client.py", line 1280, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\paras\AppData\Roaming\Python\Python314\site-packages\groq\_base_client.py", line 1067, in request
+    raise self._make_status_error_from_response(err.response) from None
+groq.RateLimitError: Error code: 429 - {'error': {'message': 'Rate limit reached for model `llama-3.3-70b-versatile` in organization `org_01kmxqpgmberasx2d6391bjp72` service tier `on_demand` on tokens per day (TPD): Limit 100000, Used 99430, Requested 2343. Please try again in 25m31.871999999s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}
+Traceback (most recent call last):
+  File "C:\Users\paras\OneDrive\Desktop\final\backend\backend.py", line 726, in calendar_stats
+    print(f"[CALENDAR DEBUG] Query range today: {sot_iso} \u2192 {eot_iso}")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python314\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2192' in position 62: character maps to <undefined>
+Traceback (most recent call last):
+  File "C:\Users\paras\OneDrive\Desktop\final\backend\backend.py", line 587, in sprint_health
+    text = ask_gemini(prompt, json_mode=True)
+  File "C:\Users\paras\OneDrive\Desktop\final\backend\backend.py", line 135, in ask_gemini
+    chat = groq_client.chat.completions.create(**params)
+  File "C:\Users\paras\AppData\Roaming\Python\Python314\site-packages\groq\resources\chat\completions.py", line 461, in create
+    return self._post(
+           ~~~~~~~~~~^
+        "/openai/v1/chat/completions",
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<45 lines>...
+        stream_cls=Stream[ChatCompletionChunk],
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\paras\AppData\Roaming\Python\Python314\site-packages\groq\_base_client.py", line 1280, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\paras\AppData\Roaming\Python\Python314\site-packages\groq\_base_client.py", line 1067, in request
+    raise self._make_status_error_from_response(err.response) from None
+groq.RateLimitError: Error code: 429 - {'error': {'message': 'Rate limit reached for model `llama-3.3-70b-versatile` in organization `org_01kmxqpgmberasx2d6391bjp72` service tier `on_demand` on tokens per day (TPD): Limit 100000, Used 99127, Requested 1348. Please try again in 6m50.4s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}
