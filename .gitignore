@@ -19,5 +19,14 @@ backend/credentials.json
 tokens.txt
 backend/tokens.txt
 
-# Generated file for copy-pasting to Railway
+# Generated file for copy-pasting to Railway (contains sensitive Base64 blobs)
 RAILWAY_ENV_VARS.txt
+
+# Debug / temp files created during troubleshooting - never commit these
+debug_header.txt
+jira_debug.json
+jira_debug.json
+old_backend_diff.txt
+test_jira.py
+myself.json
+*.debug.txt
