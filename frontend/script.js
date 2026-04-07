@@ -271,48 +271,56 @@ try {
 
 // ===================== PRELOADER =====================
 const preloader = document.getElementById('preloader');
-if (preloader && typeof gsap !== 'undefined') {
-    if (lenis) lenis.stop();
+const skipLoader = new URLSearchParams(window.location.search).get('skip_loader') === 'true';
 
-    gsap.to('#wave-path', {
-        x: -500,
-        duration: 2.2,
-        ease: "none",
-        repeat: -1
-    });
+if (preloader) {
+    if (skipLoader) {
+        // Bypass the loading animation completely
+        preloader.remove();
+        if (typeof lenis !== 'undefined' && lenis) lenis.start();
+    } else if (typeof gsap !== 'undefined') {
+        if (typeof lenis !== 'undefined' && lenis) lenis.stop();
 
-    gsap.fromTo('#wave-path', 
-        { y: 0 }, 
-        { 
-            y: -220, 
-            duration: 4.0, 
-            ease: "power1.inOut", 
-            onComplete: () => {
-                gsap.to(preloader, {
-                    yPercent: -100,
-                    duration: 0.8,
-                    ease: "power3.inOut",
-                    onComplete: () => {
-                        preloader.remove();
-                        if (lenis) lenis.start();
-                    }
-                });
+        gsap.to('#wave-path', {
+            x: -500,
+            duration: 2.2,
+            ease: "none",
+            repeat: -1
+        });
+
+        gsap.fromTo('#wave-path', 
+            { y: 0 }, 
+            { 
+                y: -220, 
+                duration: 4.0, 
+                ease: "power1.inOut", 
+                onComplete: () => {
+                    gsap.to(preloader, {
+                        yPercent: -100,
+                        duration: 0.8,
+                        ease: "power3.inOut",
+                        onComplete: () => {
+                            preloader.remove();
+                            if (typeof lenis !== 'undefined' && lenis) lenis.start();
+                        }
+                    });
+                }
             }
-        }
-    );
+        );
 
-    let counter = { val: 0 };
-    gsap.to(counter, {
-        val: 100,
-        duration: 4.0,
-        ease: "power1.inOut",
-        onUpdate: () => {
-            const percText = document.getElementById('loading-percent');
-            if (percText) {
-                percText.textContent = `loading... ${Math.floor(counter.val)} %`;
+        let counter = { val: 0 };
+        gsap.to(counter, {
+            val: 100,
+            duration: 4.0,
+            ease: "power1.inOut",
+            onUpdate: () => {
+                const percText = document.getElementById('loading-percent');
+                if (percText) {
+                    percText.textContent = `loading... ${Math.floor(counter.val)} %`;
+                }
             }
-        }
-    });
+        });
+    }
 }
 
 
