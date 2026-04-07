@@ -135,6 +135,31 @@ body {
     color: var(--c-cyan);
 }
 
+/* Logo as anchor — reset link styles */
+a.d-logo {
+    text-decoration: none;
+    color: inherit;
+    transition: opacity 0.2s ease;
+}
+a.d-logo:hover {
+    opacity: 0.8;
+}
+
+/* Icon-only button (home button) */
+.d-btn-icon {
+    padding: 12px;
+    min-width: 44px;
+    justify-content: center;
+    text-decoration: none;
+}
+.d-btn-icon .d-icon {
+    color: var(--c-cyan);
+}
+.d-btn-icon:hover {
+    background: rgba(0, 216, 255, 0.08);
+    border-color: rgba(0, 216, 255, 0.3);
+}
+
 /* Main Layout */
 .d-main {
     position: relative;
