@@ -154,6 +154,61 @@ async function fetchHealthData() {
     }
 }
 
+// ===================== INTELLIGENCE RENDERER ===================== //
+function renderIntelligenceData(data) {
+    if (!data) return;
+
+    // Predictive Planning
+    const plan = data.predictive_planning?.prediction || {};
+    const planConfidenceEl = document.getElementById('plan-confidence');
+    const planCompletionEl = document.getElementById('plan-completion');
+    const planCapacityEl = document.getElementById('plan-capacity');
+    const planOutcomeEl = document.getElementById('plan-outcome');
+
+    if (planConfidenceEl) planConfidenceEl.textContent = plan.confidence || 'Medium';
+    if (planCompletionEl) planCompletionEl.textContent = (plan.predicted_completion_pct || 0) + '%';
+    if (planCapacityEl) planCapacityEl.textContent = plan.capacity_score_next_sprint || '7/10';
+    if (planOutcomeEl) planOutcomeEl.textContent = plan.sprint_outcome || 'Analyzing...';
+
+    // Smart Rebalancing
+    const reb = data.smart_rebalancing?.rebalancing_plan || {};
+    const rebImpactEl = document.getElementById('rebalance-impact');
+    const rebGainEl = document.getElementById('rebalance-gain');
+    const rebMovesEl = document.getElementById('rebalance-moves');
+
+    if (rebImpactEl) rebImpactEl.textContent = `Impact: ${reb.projected_improvement || 'High'}`;
+    if (rebGainEl) rebGainEl.textContent = `+${(reb.completion_pct_after_estimate || 0) - (reb.completion_pct_before || 0)}%`;
+
+    if (rebMovesEl) {
+        const moves = reb.rebalancing_moves || [];
+        if (moves.length === 0) {
+            rebMovesEl.innerHTML = '<div class="d-intel-move-placeholder">Workload is already optimal.</div>';
+        } else {
+            rebMovesEl.innerHTML = moves.map(m => `
+                <div class="d-intel-move">
+                    <div class="d-intel-move-icon">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"></path></svg>
+                    </div>
+                    <div class="d-intel-move-text">
+                        <strong>${m.ticket_id}</strong>: ${m.from_engineer} → <strong>${m.to_engineer}</strong>
+                    </div>
+                </div>
+            `).join('');
+        }
+    }
+}
+
+async function fetchIntelligenceData() {
+    try {
+        const res = await fetch(`${API_BASE}/api/intelligence/dashboard`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        renderIntelligenceData(data);
+    } catch (err) {
+        console.warn('Intelligence data unavailable:', err);
+    }
+}
+
 // ===================== FALLBACK MOCK DATA ===================== //
 const FALLBACK_TICKETS = [
     { id: "AUTH-412", risk: "high",   title: "Authentication Issue",     status: "overloaded", due: "", insight: "Priya Sharma is overloaded with 2 open PRs, 4 meetings today, and 2 unanswered slack messages." },
@@ -402,7 +457,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Wire up the Run Health Check button
     const btn = document.getElementById('run-health-btn');
     if (btn) {
-        btn.addEventListener('click', fetchHealthData);
+        btn.addEventListener('click', () => {
+            fetchHealthData();
+            fetchIntelligenceData();
+        });
     }
 
     // Initialize the antigravity background
@@ -433,7 +491,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // 1. Fetch live data IMMEDIATELY in the background
         const dataPromise = Promise.all([
             fetchHealthData(),
-            fetchCalendarData()
+            fetchCalendarData(),
+            fetchIntelligenceData()
         ]);
 
         // 2. Cycle messages while we fetch
@@ -551,6 +610,14 @@ function animateLoadedData() {
             });
         });
     }
+
+    // AI Intelligence
+    gsap.from('.d-intel-card', {
+        y: 40, opacity: 0, duration: 1, stagger: 0.2, ease: 'power3.out', delay: 0.2
+    });
+    gsap.from('.d-intel-move', {
+        x: -20, opacity: 0, duration: 0.5, stagger: 0.1, ease: 'power2.out', delay: 0.6
+    });
 
     // Calendar
     gsap.from('.d-cal-event', {
