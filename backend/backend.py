@@ -17,8 +17,10 @@ from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from pydantic import BaseModel
+from intellegence_and_automation import router as ia_router
 
 app = FastAPI(title="Nexus AI")
+app.include_router(ia_router)
 
 # ── Paths ──────────────────────────────────────────────────────────────
 BACKEND_DIR  = os.path.dirname(os.path.abspath(__file__))
