@@ -44,6 +44,15 @@ def _load_env_file(path: str) -> None:
 
 _load_env_file(os.path.join(BACKEND_DIR, ".env"))
 
+# ── Database Initialization ────────────────────────────────────────────
+try:
+    from database import engine
+    import models
+    models.Base.metadata.create_all(bind=engine)
+    print("[NEXUS DB] Database initialized successfully.")
+except Exception as e:
+    print(f"[NEXUS DB ERROR] Failed to initialize database: {e}")
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
